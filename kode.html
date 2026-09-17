@@ -1,0 +1,92 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+    <style>
+        body {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+            margin: 0;
+            background: #0f3460;
+            font-family: arial;
+            text-align: center;
+        }
+
+        #submit:active {
+            transform: scale(1.1);
+        }
+
+        input {
+            width: 100%;
+            padding:12px;
+            margin: 10px 0;
+            border: 2px solid #ddd;
+            border-radius: 8px;
+            font-size: 16px;
+            box-sizing: border-box;
+            cursor: pointer;
+            transition: transform 0.1s ease;
+        }
+        
+        .myForm {
+            background: white;
+            padding:40px;
+            border-radius: 15px;
+            box-shadow: 0 10px 30px rgba(0, 0, 0,0.3);
+            width: 400px;
+        }
+
+        #pesan {
+            margin-top: 15px;
+            font-weight: bold;
+        }
+        
+    </style>
+</head>
+<body>
+    <form class="myForm" id="myForm">
+        <h2> Masukkan Password Rahasia</h2>
+        <input type="password" id="password" required placeholder="Masukkan Password">
+        <input type="submit" id="submit" value="Masuk">
+    </form>
+
+    <p id="pesan"></p>
+
+    <script>
+        const inputpassword = document.getElementById('password');
+        const form = document.getElementById('myForm');
+        const submit = document.getElementById('submit');
+        const pesan = document.getElementById('pesan');
+
+        function cekPassword(event) {
+            if (event) {
+                event.preventDefault();
+            }
+
+            if (inputpassword.value === "sigma") {
+                window.location.href = "https://www.youtube.com/watch?v=c_qrj2svjjo";
+            } else {
+                pesan.textContent = "password anda salah";
+                pesan.style.color = "red";
+            }
+        }
+
+        form.addEventListener('submit', cekPassword);
+
+        submit.addEventListener('click', function (event) {
+            event.preventDefault();
+            cekPassword(event);
+        });
+
+        inputpassword.addEventListener('keypress', function (e) {
+            if (e.key === 'Enter') {
+                cekPassword(e);
+            }
+        });
+    </script>
+</body>
+</html>
