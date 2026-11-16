@@ -1,0 +1,426 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Latihan Soal Lembaga Keuangan & Literasi Finansial</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Segoe UI', Roboto, system-ui, sans-serif;
+        }
+        body {
+            background: linear-gradient(145deg, #f0f4fa 0%, #e2e9f2 100%);
+            padding: 24px 16px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+        }
+        .container {
+            max-width: 900px;
+            width: 100%;
+            background: rgba(255, 255, 255, 0.9);
+            backdrop-filter: blur(4px);
+            border-radius: 32px;
+            box-shadow: 0 20px 40px -12px rgba(0, 20, 40, 0.25);
+            padding: 32px 28px;
+            border: 1px solid #ffffff80;
+        }
+        h1 {
+            font-size: 1.9rem;
+            font-weight: 600;
+            color: #1a2e4b;
+            text-align: center;
+            margin-bottom: 8px;
+            letter-spacing: -0.02em;
+        }
+        .subhead {
+            text-align: center;
+            color: #4a5f7a;
+            margin-bottom: 28px;
+            font-size: 1rem;
+            border-bottom: 2px dashed #b8c9dd;
+            padding-bottom: 16px;
+        }
+        .soal-item {
+            background: #ffffff;
+            border-radius: 20px;
+            padding: 18px 22px;
+            margin-bottom: 14px;
+            box-shadow: 0 2px 8px rgba(0, 20, 30, 0.04);
+            border: 1px solid #e9eef4;
+            transition: all 0.1s;
+        }
+        .soal-item:hover {
+            border-color: #b7c9e0;
+            box-shadow: 0 6px 14px rgba(0, 40, 70, 0.06);
+        }
+        .soal-text {
+            font-weight: 600;
+            color: #0b1e33;
+            margin-bottom: 12px;
+            font-size: 1rem;
+            line-height: 1.4;
+            display: flex;
+            gap: 8px;
+        }
+        .soal-number {
+            color: #2c5f9a;
+            font-weight: 700;
+            min-width: 26px;
+        }
+        .options {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 8px 16px;
+            padding-left: 6px;
+        }
+        .option {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            font-size: 0.95rem;
+            color: #1e2f44;
+            cursor: pointer;
+            padding: 6px 12px 6px 8px;
+            border-radius: 40px;
+            transition: background 0.15s;
+            border: 1px solid transparent;
+        }
+        .option:hover {
+            background: #eef4fd;
+            border-color: #c7d9f0;
+        }
+        .option input[type="radio"] {
+            appearance: none;
+            width: 18px;
+            height: 18px;
+            border: 2px solid #8aa0bc;
+            border-radius: 50%;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            transition: 0.1s;
+            flex-shrink: 0;
+            cursor: pointer;
+        }
+        .option input[type="radio"]:checked {
+            border-color: #1f6ed4;
+            background: #1f6ed4;
+            box-shadow: inset 0 0 0 4px white;
+        }
+        .option input[type="radio"]:focus-visible {
+            outline: 2px solid #1f6ed4;
+            outline-offset: 2px;
+        }
+        .btn-cek {
+            display: block;
+            width: 100%;
+            margin-top: 32px;
+            padding: 18px 10px;
+            background: #1a3f66;
+            color: white;
+            font-size: 1.25rem;
+            font-weight: 700;
+            border: none;
+            border-radius: 60px;
+            cursor: pointer;
+            letter-spacing: 0.3px;
+            box-shadow: 0 12px 24px -8px #1a3f6690;
+            transition: all 0.2s ease;
+            border: 1px solid #ffffff30;
+        }
+        .btn-cek:hover {
+            background: #0f2d4b;
+            transform: scale(1.01);
+            box-shadow: 0 18px 28px -8px #0f2d4bcc;
+        }
+        .btn-cek:active {
+            transform: scale(0.99);
+        }
+        .hasil {
+            margin-top: 24px;
+            padding: 18px 22px;
+            border-radius: 20px;
+            background: #eaf1fb;
+            border-left: 6px solid #1f6ed4;
+            font-weight: 500;
+            color: #0b2a46;
+            display: none;
+            font-size: 1.05rem;
+        }
+        .hasil.show {
+            display: block;
+        }
+        .skor {
+            font-size: 1.4rem;
+            font-weight: 700;
+            color: #0a2b4b;
+            margin-bottom: 8px;
+        }
+        .detail-benar {
+            color: #1d6b3f;
+            font-weight: 600;
+        }
+        .detail-salah {
+            color: #b13e3e;
+            font-weight: 600;
+        }
+        .footer-note {
+            margin-top: 18px;
+            text-align: center;
+            color: #6a7e96;
+            font-size: 0.85rem;
+        }
+        .btn-shuffle {
+            display: block;
+            width: 100%;
+            margin-top: 14px;
+            padding: 12px 10px;
+            background: #eaf1fb;
+            color: #1a3f66;
+            font-size: 1rem;
+            font-weight: 600;
+            border: 2px solid #c2d6ef;
+            border-radius: 60px;
+            cursor: pointer;
+            transition: all 0.2s ease;
+        }
+        .btn-shuffle:hover {
+            background: #d8e6fa;
+            border-color: #9ebde3;
+        }
+        @media (max-width: 600px) {
+            .container { padding: 22px 16px; }
+            h1 { font-size: 1.5rem; }
+            .soal-item { padding: 14px 16px; }
+            .options { flex-direction: column; gap: 4px; }
+            .option { padding: 6px 8px; }
+        }
+    </style>
+</head>
+<body>
+<div class="container">
+    <h1>📚 Latihan Soal</h1>
+    <div class="subhead">Lembaga Keuangan & Literasi Finansial · Pilihan Ganda</div>
+    
+    <form id="kuisForm">
+        <div id="soalContainer"></div>
+    </form>
+    
+    <button class="btn-cek" id="cekBtn">✅ CEK JAWABAN</button>
+    <button class="btn-shuffle" id="shuffleBtn">🔄 ACAK ULANG SOAL</button>
+    <div id="hasil" class="hasil"></div>
+    <div class="footer-note">Pilih satu jawaban yang paling tepat. Soal & pilihan diacak setiap refresh.</div>
+</div>
+
+<script>
+    // ==================== DATA SOAL ====================
+    const soalData = [
+        { soal: "Lembaga yang tugas utamanya mengatur peredaran uang di suatu negara adalah…", opsi: ["Bank Umum", "Bank Sentral", "Bank Perkreditan Rakyat", "Lembaga Pembiayaan"], jawaban: 1 },
+        { soal: "Di Indonesia, Bank Sentral dikenal dengan nama…", opsi: ["Bank Rakyat Indonesia", "Bank Negara Indonesia", "Bank Indonesia", "Bank Mandiri"], jawaban: 2 },
+        { soal: "Berikut ini yang bukan merupakan fungsi Bank Indonesia adalah…", opsi: ["Menetapkan dan melaksanakan kebijakan moneter", "Mengawasi sistem perbankan", "Memberikan kredit langsung kepada masyarakat umum", "Mengatur kelancaran sistem pembayaran"], jawaban: 2 },
+        { soal: "Lembaga keuangan yang kegiatannya menerima simpanan, menyalurkan kredit, dan memberikan jasa pembayaran disebut…", opsi: ["Lembaga Keuangan Bukan Bank", "Asuransi", "Bank", "Pegadaian"], jawaban: 2 },
+        { soal: "Bank yang seluruh atau sebagian besar modalnya dimiliki oleh negara disebut…", opsi: ["Bank Swasta Nasional", "Bank Pemerintah", "Bank Daerah", "Bank Asing"], jawaban: 1 },
+        { soal: "Contoh bank pemerintah di Indonesia adalah…", opsi: ["Bank BCA", "Bank BNI", "Bank CIMB Niaga", "Bank Danamon"], jawaban: 1 },
+        { soal: "Bank yang berfokus melayani usaha mikro, kecil, dan menengah di daerah pedesaan adalah…", opsi: ["Bank Sentral", "Bank Umum", "Bank Perkreditan Rakyat (BPR)", "Bank Pembangunan Daerah"], jawaban: 2 },
+        { soal: "Lembaga keuangan yang berfungsi menanggung risiko kerugian yang mungkin terjadi di masa depan adalah…", opsi: ["Bank", "Asuransi", "Pegadaian", "Dana Pensiun"], jawaban: 1 },
+        { soal: "Lembaga yang memberikan pinjaman dengan jaminan barang berharga disebut…", opsi: ["Asuransi", "Pegadaian", "Bank", "Pasar Modal"], jawaban: 1 },
+        { soal: "Lembaga yang mengumpulkan dana peserta untuk dibayarkan kembali saat peserta sudah tidak bekerja lagi adalah…", opsi: ["Dana Pensiun", "Asuransi Jiwa", "Bank Tabungan", "Pegadaian"], jawaban: 0 },
+        { soal: "Berikut yang termasuk Lembaga Keuangan Bukan Bank (LKBB) adalah…", opsi: ["BRI", "BNI", "BPJS Ketenagakerjaan", "Bank Mandiri"], jawaban: 2 },
+        { soal: "Lembaga yang mengatur dan mengawasi kegiatan pasar modal di Indonesia adalah…", opsi: ["Bank Indonesia", "Otoritas Jasa Keuangan (OJK)", "Kementerian Keuangan", "Lembaga Penjamin Simpanan"], jawaban: 1 },
+        { soal: "Lembaga yang menjamin dana simpanan nasabah bank agar aman jika bank mengalami masalah adalah…", opsi: ["OJK", "LPS (Lembaga Penjamin Simpanan)", "Bank Indonesia", "Kemenkeu"], jawaban: 1 },
+        { soal: "Surat berharga yang menunjukkan kepemilikan sebagian perusahaan disebut...", opsi: ["Obligasi", "Saham", "Tabungan", "Deposito"], jawaban: 1 },
+        { soal: "Surat utang yang diterbitkan perusahaan atau pemerintah dengan janji pengembalian bunga adalah…", opsi: ["Saham", "Obligasi", "Cek", "Giro"], jawaban: 1 },
+        { soal: "Lembaga yang membantu mempertemukan penjual dan pembeli saham disebut…", opsi: ["Bursa Efek", "Bank Sentral", "Pegadaian", "Asuransi"], jawaban: 0 },
+        { soal: "Berikut yang bukan ciri Lembaga Keuangan Bukan Bank adalah…", opsi: ["Menerima simpanan seperti tabungan biasa", "Memberikan jasa asuransi", "Mengelola dana pensiun", "Menyediakan jasa gadai"], jawaban: 0 },
+        { soal: "Tugas utama Otoritas Jasa Keuangan (OJK) adalah…", opsi: ["Mencetak uang", "Mengatur dan mengawasi sektor jasa keuangan", "Memberikan pinjaman kepada pemerintah", "Menetapkan nilai tukar uang asing"], jawaban: 1 },
+        { soal: "BPJS Kesehatan termasuk jenis lembaga…", opsi: ["Bank Umum", "Asuransi Sosial", "Bank Sentral", "Lembaga Pembiayaan"], jawaban: 1 },
+        { soal: "Lembaga pembiayaan yang memberikan dana untuk pembelian kendaraan bermotor biasanya disebut…", opsi: ["Perusahaan Pembiayaan / Leasing", "Pegadaian", "Bank Sentral", "Dana Pensiun"], jawaban: 0 },
+        { soal: "Simpanan di bank yang penarikannya dapat dilakukan kapan saja dengan buku tabungan atau kartu ATM adalah…", opsi: ["Deposito", "Tabungan", "Giro", "Obligasi"], jawaban: 1 },
+        { soal: "Simpanan yang penarikannya hanya dapat dilakukan setelah jangka waktu tertentu adalah…", opsi: ["Tabungan", "Deposito", "Giro", "Dompet Digital"], jawaban: 1 },
+        { soal: "Simpanan yang penarikannya menggunakan cek atau bilyet giro adalah…", opsi: ["Tabungan", "Deposito", "Giro", "Emas"], jawaban: 2 },
+        { soal: "Uang yang dipinjamkan bank kepada nasabah dengan syarat pengembalian ditambah bunga disebut…", opsi: ["Tabungan", "Kredit / Pinjaman", "Devisa", "Bunga"], jawaban: 1 },
+        { soal: "Imbal jasa yang diberikan bank kepada nasabah atas simpanan uangnya disebut…", opsi: ["Bunga Tabungan", "Bunga Kredit", "Pajak", "Denda"], jawaban: 0 },
+        { soal: "Biaya tambahan yang harus dibayar nasabah kepada bank saat melunasi pinjaman adalah…", opsi: ["Bunga Tabungan", "Bunga Kredit", "Laba", "Dividen"], jawaban: 1 },
+        { soal: "Alat pembayaran nontunai berbentuk kartu yang memotong saldo tabungan langsung saat bertransaksi adalah...", opsi: ["Kartu Kredit", "Kartu Debit", "Cek", "Uang Elektronik"], jawaban: 1 },
+        { soal: "Kartu pembayaran yang memungkinkan kita berbelanja dulu dan membayar nanti adalah...", opsi: ["Kartu Debit", "Kartu Kredit", "Kartu Keluarga", "KTP"], jawaban: 1 },
+        { soal: "Contoh uang elektronik yang digunakan untuk transaksi cepat adalah...", opsi: ["Cek", "Giro", "Kartu Flazz / E-Money", "Saham"], jawaban: 2 },
+        { soal: "Dokumen perintah tertulis kepada bank untuk membayarkan sejumlah uang kepada orang yang namanya tertulis di dalamnya adalah...", opsi: ["Cek", "KTP", "Sertifikat", "Faktur"], jawaban: 0 },
+        { soal: "Keuntungan menabung di bank dibanding di rumah adalah...", opsi: ["Uang aman dan mendapat bunga", "Uang tidak bisa diambil", "Harus membayar biaya simpanan besar", "Uang akan diambil pemerintah"], jawaban: 0 },
+        { soal: "Jika kita menabung Rp1.000.000 di bank dan mendapat bunga 3% per tahun, maka bunga yang diterima adalah...", opsi: ["Rp10.000", "Rp20.000", "Rp30.000", "Rp300.000"], jawaban: 2 },
+        { soal: "Jaminan yang diserahkan saat meminjam uang di bank agar dipercaya mengembalikan disebut...", opsi: ["Bunga", "Agunan / Jaminan", "Denda", "Tabungan"], jawaban: 1 },
+        { soal: "Kredit yang diberikan untuk modal usaha disebut...", opsi: ["Kredit Konsumtif", "Kredit Produktif", "Kredit Rumah", "Kredit Kendaraan"], jawaban: 1 },
+        { soal: "Kredit yang digunakan untuk membeli barang pemenuhan kebutuhan sehari-hari disebut...", opsi: ["Kredit Produktif", "Kredit Konsumtif", "Kredit Investasi", "Kredit Umum"], jawaban: 1 },
+        { soal: "Berikut yang bukan syarat umum meminjam uang di bank adalah...", opsi: ["Memiliki identitas resmi", "Memiliki kemampuan mengembalikan", "Menyerahkan jaminan jika diperlukan", "Memberikan hadiah kepada petugas bank"], jawaban: 3 },
+        { soal: "Transaksi keuangan menggunakan gawai (HP) dan internet disebut...", opsi: ["Perbankan Digital", "Menabung di celengan", "Menyimpan emas", "Menanam saham"], jawaban: 0 },
+        { soal: "Manfaat menggunakan jasa perbankan digital adalah...", opsi: ["Transaksi lebih cepat dan mudah", "Uang hilang pasti tidak kembali", "Harus datang ke bank", "Biaya selalu lebih mahal"], jawaban: 0 },
+        { soal: "Hal yang harus dirahasiakan saat menggunakan layanan perbankan adalah...", opsi: ["Nomor PIN", "Nama lengkap", "Alamat rumah", "Nomor rekening (bagian umum)"], jawaban: 0 },
+        { soal: "Jika menerima telepon mengaku dari bank meminta nomor PIN, sikap kita sebaiknya...", opsi: ["Langsung memberitahukan", "Menolak dan melaporkan ke bank resmi", "Memberitahukan sebagian", "Bertanya kembali lalu memberi"], jawaban: 1 },
+        { soal: "Kemampuan memahami, mengelola, dan menggunakan sumber daya keuangan untuk kehidupan sejahtera disebut…", opsi: ["Literasi Finansial", "Literasi Baca", "Literasi Digital", "Literasi Lingkungan"], jawaban: 0 },
+        { soal: "Tujuan utama mengelola uang adalah…", opsi: ["Menghabiskan semua", "Memenuhi kebutuhan dan merencanakan masa depan", "Membeli barang mewah saja", "Meminjamkan ke semua orang"], jawaban: 1 },
+        { soal: "Sesuatu yang harus dipenuhi agar kita bisa hidup disebut…", opsi: ["Keinginan", "Kebutuhan", "Gaya hidup", "Hobi"], jawaban: 1 },
+        { soal: "Sesuatu yang ditambahkan untuk kepuasan, namun tidak wajib dipenuhi disebut…", opsi: ["Kebutuhan", "Keinginan", "Kewajiban", "Utang"], jawaban: 1 },
+        { soal: "Contoh kebutuhan primer adalah…", opsi: ["Makan, pakaian, tempat tinggal", "HP terbaru, tas bermerek", "Liburan ke luar negeri", "Koleksi mainan mahal"], jawaban: 0 },
+        { soal: "Perbedaan kebutuhan dan keinginan yang benar adalah…", opsi: ["Kebutuhan bisa ditunda, keinginan harus segera dipenuhi", "Kebutuhan mendesak, keinginan bisa ditunda", "Semua keinginan adalah kebutuhan", "Kebutuhan tidak penting, keinginan yang penting"], jawaban: 1 },
+        { soal: "Rencana pengelolaan pendapatan dan pengeluaran disebut…", opsi: ["Anggaran / Rencana Keuangan", "Laporan Sekolah", "Daftar Belanja Tanpa Batas", "Catatan Hiburan"], jawaban: 0 },
+        { soal: "Prinsip mengelola uang yang benar adalah…", opsi: ["Pengeluaran > Pendapatan", "Pengeluaran = Pendapatan + Utang", "Pendapatan > Pengeluaran", "Menghabiskan sisa uang"], jawaban: 2 },
+        { soal: "Langkah pertama dalam menyusun anggaran keuangan pribadi adalah…", opsi: ["Membeli barang yang diinginkan", "Menghitung jumlah pendapatan/uang yang dimiliki", "Meminjam uang dulu", "Menabung sisa saja"], jawaban: 1 },
+        { soal: "Bagian pendapatan yang disisihkan sebelum dibelanjakan disebut…", opsi: ["Menabung dulu", "Menghabiskan dulu", "Berutang dulu", "Membelanjakan semua"], jawaban: 0 },
+        { soal: "Dana yang disisihkan untuk kejadian tak terduga disebut…", opsi: ["Dana Darurat", "Dana Liburan", "Dana Belanja", "Dana Hadiah"], jawaban: 0 },
+        { soal: "Jumlah ideal dana darurat bagi pemula adalah setara pengeluaran…", opsi: ["1–3 bulan", "1 tahun", "1 hari", "10 tahun"], jawaban: 0 },
+        { soal: "Tujuan menabung jangka pendek adalah…", opsi: ["Membeli rumah 10 tahun lagi", "Pendidikan anak dewasa", "Membeli barang dalam waktu dekat", "Pensiun"], jawaban: 2 },
+        { soal: "Tujuan menabung jangka panjang adalah…", opsi: ["Membeli mainan minggu ini", "Biaya pendidikan atau persiapan masa depan", "Makan di restoran", "Membeli pakaian sekarang"], jawaban: 1 },
+        { soal: "Uang yang ditanamkan untuk mendapatkan keuntungan di masa depan disebut...", opsi: ["Investasi", "Belanja", "Utang", "Sumbangan"], jawaban: 0 },
+        { soal: "Prinsip investasi yang benar adalah...", opsi: ["Semakin tinggi keuntungan, semakin tinggi risikonya", "Tidak ada risiko sama sekali", "Pasti untung berlipat ganda dalam semalam", "Tidak perlu mempelajari dulu"], jawaban: 0 },
+        { soal: "Contoh investasi berisiko rendah adalah...", opsi: ["Menabung di bank / Deposito", "Judi daring", "Skema cepat kaya", "Spekulasi tanpa pengetahuan"], jawaban: 0 },
+        { soal: "Contoh investasi yang lebih berisiko namun berpotensi untung besar adalah...", opsi: ["Saham", "Tabungan biasa", "Deposito", "Menyimpan uang di celengan"], jawaban: 0 },
+        { soal: "Hal yang harus dihindari dalam mengelola keuangan adalah...", opsi: ["Membeli barang karena ikut-ikutan teman", "Mencatat pengeluaran", "Membuat anggaran", "Menyisihkan dana darurat"], jawaban: 0 },
+        { soal: "Sikap hemat yang benar adalah...", opsi: ["Tidak boros dan sesuai kebutuhan", "Pelit kepada diri sendiri", "Tidak mau beli apa saja", "Menghabiskan uang untuk pamer"], jawaban: 0 },
+        { soal: "Catatan masuk dan keluarnya uang disebut...", opsi: ["Buku Kas", "Buku Pelajaran", "Buku Catatan Teman", "Buku Cerita"], jawaban: 0 },
+        { soal: "Jika pendapatan Rp500.000 dan pengeluaran Rp400.000, maka sisanya adalah...", opsi: ["Rp100.000", "Rp200.000", "Rp900.000", "Rp0"], jawaban: 0 },
+        { soal: "Jika pengeluaran lebih besar dari pendapatan, maka akan terjadi…", opsi: ["Defisit / Kekurangan", "Surplus", "Keseimbangan", "Laba"], jawaban: 0 },
+        { soal: "Jika pendapatan lebih besar dari pengeluaran, maka disebut…", opsi: ["Surplus", "Defisit", "Rugi", "Utang"], jawaban: 0 },
+        { soal: "Sikap bijak saat memiliki sisa uang adalah…", opsi: ["Menabung atau berinvestasi", "Langsung dibelanjakan semua", "Diberikan semuanya", "Disimpan di tempat tersembunyi tanpa tujuan"], jawaban: 0 },
+        { soal: "Sebelum membeli barang mahal, sebaiknya…", opsi: ["Menunda dan mempertimbangkan kebutuhannya", "Langsung beli sebelum naik harga", "Meminjam uang teman", "Menggunakan utang"], jawaban: 0 },
+        { soal: "Berikut yang bukan termasuk cara menghemat uang saku adalah…", opsi: ["Membawa bekal dari rumah", "Mencatat pengeluaran harian", "Membeli semua jajanan yang ada", "Menyisihkan sebagian untuk ditabung"], jawaban: 2 },
+        { soal: "Manfaat memiliki asuransi bagi keluarga adalah…", opsi: ["Membantu meringankan biaya jika terjadi risiko", "Uang tidak bisa diambil lagi", "Menambah pengeluaran setiap hari", "Membeli barang mahal"], jawaban: 0 },
+        { soal: "Mengapa kita harus belajar mengelola keuangan sejak dini?", opsi: ["Agar terbiasa hidup tertib dan sejahtera di masa depan", "Agar bisa kaya dengan cepat", "Agar tidak berbagi dengan orang lain", "Agar tidak perlu bekerja"], jawaban: 0 },
+        { soal: "Tindakan yang menunjukkan sikap bertanggung jawab atas uang adalah...", opsi: ["Menggunakan sesuai rencana dan mencatatnya", "Menghabiskan untuk kesenangan", "Meminjam lalu lupa mengembalikan", "Membelikan barang untuk pamer"], jawaban: 0 },
+        { soal: "Uang yang kita miliki jumlah terbatas, maka kita harus…", opsi: ["Memilih prioritas kebutuhan", "Meminta tambahan terus-menerus", "Membeli semua keinginan", "Mengabaikan kebutuhan"], jawaban: 0 },
+        { soal: "Utang sebaiknya diambil untuk…", opsi: ["Kebutuhan mendesak yang penting dan mampu dibayar", "Gaya hidup mewah", "Barang yang tidak perlu", "Berjudi"], jawaban: 0 },
+        { soal: "Saat berutang, kewajiban kita adalah…", opsi: ["Mengembalikan tepat waktu sesuai kesepakatan", "Menunda sesuka hati", "Menghindari pemberi pinjaman", "Meminjam lagi sebelum lunas"], jawaban: 0 },
+        { soal: "Berikut yang termasuk pengeluaran tetap keluarga adalah…", opsi: ["Biaya sewa rumah / cicilan rumah", "Jajan harian", "Hadiah ulang tahun", "Liburan"], jawaban: 0 },
+        { soal: "Pengeluaran yang jumlahnya berubah-ubah disebut…", opsi: ["Pengeluaran Tidak Tetap", "Pengeluaran Tetap", "Pendapatan Tetap", "Tabungan"], jawaban: 0 },
+        { soal: "Langkah bijak jika ingin membeli barang yang belum mampu dibeli tunai adalah…", opsi: ["Menabung sampai cukup dulu", "Mengutang tanpa hitungan", "Memaksa orang lain membelikan", "Mengambil uang tabungan orang lain"], jawaban: 0 },
+        { soal: "Pernyataan yang benar tentang keuangan adalah...", opsi: ["Menabung lebih baik daripada berutang untuk konsumsi", "Semua utang itu buruk", "Menabung tidak berguna", "Keuangan urusan orang dewasa saja"], jawaban: 0 },
+        { soal: "Sikap kritis terhadap tawaran investasi dengan keuntungan luar biasa cepat adalah...", opsi: ["Waspada, kemungkinan penipuan", "Langsung ikut agar kaya", "Mengajak semua teman ikut", "Meminjam uang untuk ikut"], jawaban: 0 },
+        { soal: "Membagikan uang saku ke amplop berbeda (makan, tabungan, sumbangan) adalah contoh…", opsi: ["Penganggaran Sederhana", "Menghabiskan Uang", "Menyembunyikan Uang", "Membagi Uang ke Teman"], jawaban: 0 },
+        { soal: "Tujuan akhir mempelajari literasi finansial adalah...", opsi: ["Mencapai kesejahteraan hidup secara mandiri", "Menjadi orang terkaya di dunia", "Tidak perlu berbagi dengan orang lain", "Menghindari semua pengeluaran"], jawaban: 0 }
+    ];
+
+    // ==================== VARIABEL GLOBAL ====================
+    let soalAcakAktif = []; // menyimpan urutan soal yang sedang aktif
+
+    const container = document.getElementById('soalContainer');
+    const form = document.getElementById('kuisForm');
+    const hasilDiv = document.getElementById('hasil');
+    const cekBtn = document.getElementById('cekBtn');
+    const shuffleBtn = document.getElementById('shuffleBtn');
+
+    // ==================== FUNGSI SHUFFLE ====================
+    function shuffleArray(array) {
+        const arr = [...array];
+        for (let i = arr.length - 1; i > 0; i--) {
+            const j = Math.floor(Math.random() * (i + 1));
+            [arr[i], arr[j]] = [arr[j], arr[i]];
+        }
+        return arr;
+    }
+
+    // ==================== RENDER SOAL ====================
+    function renderSoal() {
+        // Acak urutan soal
+        soalAcakAktif = shuffleArray(soalData);
+
+        let html = '';
+        soalAcakAktif.forEach((item, index) => {
+            const nomor = index + 1;
+            html += `<div class="soal-item" data-index="${index}">`;
+            html += `<div class="soal-text"><span class="soal-number">${nomor}.</span> ${item.soal}</div>`;
+            html += `<div class="options">`;
+
+            // Acak juga urutan pilihan jawaban
+            const opsiDenganIndex = item.opsi.map((opsi, i) => ({ opsi, asli: i }));
+            const opsiAcak = shuffleArray(opsiDenganIndex);
+
+            opsiAcak.forEach(({ opsi, asli }, optIdx) => {
+                const label = String.fromCharCode(65 + optIdx); // A, B, C, D
+                html += `<label class="option">
+                            <input type="radio" name="q${index}" value="${asli}" data-qindex="${index}">
+                            <span>${label}. ${opsi}</span>
+                         </label>`;
+            });
+            html += `</div></div>`;
+        });
+        container.innerHTML = html;
+
+        // Sembunyikan hasil saat soal diacak ulang
+        hasilDiv.classList.remove('show');
+        hasilDiv.innerHTML = '';
+    }
+
+    // ==================== CEK JAWABAN ====================
+    function cekJawaban() {
+        const inputs = form.querySelectorAll('input[type="radio"]:checked');
+        const jawabanUser = {};
+        inputs.forEach(input => {
+            const qIndex = parseInt(input.dataset.qindex);
+            jawabanUser[qIndex] = parseInt(input.value);
+        });
+
+        let benar = 0;
+        let total = soalAcakAktif.length;
+
+        soalAcakAktif.forEach((item, idx) => {
+            const userAns = jawabanUser[idx];
+            if (userAns !== undefined && userAns === item.jawaban) {
+                benar++;
+            }
+        });
+
+        const persen = Math.round((benar / total) * 100);
+        let pesan = '';
+        if (persen >= 90) pesan = '🌟 Luar biasa! Pemahamanmu sangat baik.';
+        else if (persen >= 70) pesan = '👍 Bagus! Tingkatkan lagi sedikit.';
+        else if (persen >= 50) pesan = '📖 Cukup baik, pelajari kembali materi yang belum dikuasai.';
+        else pesan = '💪 Jangan menyerah! Coba baca ulang materi dan kerjakan lagi.';
+
+        let detailHtml = `<div class="skor">Skor: ${benar} / ${total} (${persen}%)</div>`;
+        detailHtml += `<div>${pesan}</div>`;
+
+        let rincian = '<div style="margin-top:14px;font-size:0.95rem;"><strong>Rincian jawaban:</strong><ul style="margin-top:8px; list-style:none; display:flex; flex-wrap:wrap; gap:6px 14px;">';
+        soalAcakAktif.forEach((item, idx) => {
+            const userAns = jawabanUser[idx];
+            const isCorrect = (userAns !== undefined && userAns === item.jawaban);
+            const statusClass = isCorrect ? 'detail-benar' : 'detail-salah';
+            const statusText = isCorrect ? '✓' : '✗';
+            const nomor = idx + 1;
+            rincian += `<li class="${statusClass}" style="font-size:0.9rem;">${nomor}. ${statusText}</li>`;
+        });
+        rincian += '</ul></div>';
+
+        hasilDiv.innerHTML = detailHtml + rincian;
+        hasilDiv.classList.add('show');
+    }
+
+    // ==================== EVENT LISTENER ====================
+    cekBtn.addEventListener('click', (e) => {
+        e.preventDefault();
+        cekJawaban();
+        hasilDiv.scrollIntoView({ behavior: 'smooth', block: 'center' });
+    });
+
+    // Tombol acak ulang manual
+    shuffleBtn.addEventListener('click', (e) => {
+        e.preventDefault();
+        renderSoal();
+        window.scrollTo({ top: 0, behavior: 'smooth' });
+    });
+
+    // Sembunyikan hasil jika ada perubahan jawaban
+    form.addEventListener('change', () => {
+        hasilDiv.classList.remove('show');
+        hasilDiv.innerHTML = '';
+    });
+
+    // Cegah form submit reload
+    form.addEventListener('submit', (e) => e.preventDefault());
+
+    // ==================== INISIALISASI ====================
+    renderSoal();
+</script>
+</body>
+</html>
