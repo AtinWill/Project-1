@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Latihan Soal Lembaga Keuangan & Literasi Finansial</title>
+    <title>Latihan Soal Teks Diskusi</title>
     <style>
         * {
             margin: 0;
@@ -160,26 +160,29 @@
             color: #0a2b4b;
             margin-bottom: 8px;
         }
-        .detail-benar {
-            color: #1d6b3f;
-            font-weight: 600;
-        }
-        .detail-salah {
-            color: #b13e3e;
-            font-weight: 600;
-        }
         .footer-note {
             margin-top: 18px;
             text-align: center;
             color: #6a7e96;
             font-size: 0.85rem;
         }
-        .badge {
-            background: #ffffff;
-            border-radius: 40px;
-            padding: 4px 10px;
-            font-size: 0.8rem;
-            color: #2a4b72;
+        .btn-shuffle {
+            display: block;
+            width: 100%;
+            margin-top: 14px;
+            padding: 12px 10px;
+            background: #eaf1fb;
+            color: #1a3f66;
+            font-size: 1rem;
+            font-weight: 600;
+            border: 2px solid #c2d6ef;
+            border-radius: 60px;
+            cursor: pointer;
+            transition: all 0.2s ease;
+        }
+        .btn-shuffle:hover {
+            background: #d8e6fa;
+            border-color: #9ebde3;
         }
         @media (max-width: 600px) {
             .container { padding: 22px 16px; }
@@ -193,191 +196,206 @@
 <body>
 <div class="container">
     <h1>📚 Latihan Soal</h1>
-    <div class="subhead">Lembaga Keuangan & Literasi Finansial · Pilihan Ganda</div>
+    <div class="subhead">Teks Diskusi · Pilihan Ganda</div>
     
     <form id="kuisForm">
         <div id="soalContainer"></div>
     </form>
     
     <button class="btn-cek" id="cekBtn">✅ CEK JAWABAN</button>
+    <button class="btn-shuffle" id="shuffleBtn">🔄 ACAK ULANG SOAL</button>
     <div id="hasil" class="hasil"></div>
-    <div class="footer-note">Pilih satu jawaban yang paling tepat.</div>
+    <div class="footer-note">Pilih satu jawaban yang paling tepat. Soal & pilihan diacak setiap refresh.</div>
 </div>
 
 <script>
-    // Data soal dan kunci jawaban (index 0 = A, 1 = B, 2 = C, 3 = D)
+    // ==================== DATA SOAL TEKS DISKUSI (80 SOAL) ====================
     const soalData = [
-        { soal: "Lembaga yang tugas utamanya mengatur peredaran uang di suatu negara adalah…", opsi: ["Bank Umum", "Bank Sentral", "Bank Perkreditan Rakyat", "Lembaga Pembiayaan"], jawaban: 1 },
-        { soal: "Di Indonesia, Bank Sentral dikenal dengan nama…", opsi: ["Bank Rakyat Indonesia", "Bank Negara Indonesia", "Bank Indonesia", "Bank Mandiri"], jawaban: 2 },
-        { soal: "Berikut ini yang bukan merupakan fungsi Bank Indonesia adalah…", opsi: ["Menetapkan dan melaksanakan kebijakan moneter", "Mengawasi sistem perbankan", "Memberikan kredit langsung kepada masyarakat umum", "Mengatur kelancaran sistem pembayaran"], jawaban: 2 },
-        { soal: "Lembaga keuangan yang kegiatannya menerima simpanan, menyalurkan kredit, dan memberikan jasa pembayaran disebut…", opsi: ["Lembaga Keuangan Bukan Bank", "Asuransi", "Bank", "Pegadaian"], jawaban: 2 },
-        { soal: "Bank yang seluruh atau sebagian besar modalnya dimiliki oleh negara disebut…", opsi: ["Bank Swasta Nasional", "Bank Pemerintah", "Bank Daerah", "Bank Asing"], jawaban: 1 },
-        { soal: "Contoh bank pemerintah di Indonesia adalah…", opsi: ["Bank BCA", "Bank BNI", "Bank CIMB Niaga", "Bank Danamon"], jawaban: 1 },
-        { soal: "Bank yang berfokus melayani usaha mikro, kecil, dan menengah di daerah pedesaan adalah…", opsi: ["Bank Sentral", "Bank Umum", "Bank Perkreditan Rakyat (BPR)", "Bank Pembangunan Daerah"], jawaban: 2 },
-        { soal: "Lembaga keuangan yang berfungsi menanggung risiko kerugian yang mungkin terjadi di masa depan adalah…", opsi: ["Bank", "Asuransi", "Pegadaian", "Dana Pensiun"], jawaban: 1 },
-        { soal: "Lembaga yang memberikan pinjaman dengan jaminan barang berharga disebut…", opsi: ["Asuransi", "Pegadaian", "Bank", "Pasar Modal"], jawaban: 1 },
-        { soal: "Lembaga yang mengumpulkan dana peserta untuk dibayarkan kembali saat peserta sudah tidak bekerja lagi adalah…", opsi: ["Dana Pensiun", "Asuransi Jiwa", "Bank Tabungan", "Pegadaian"], jawaban: 0 },
-        { soal: "Berikut yang termasuk Lembaga Keuangan Bukan Bank (LKBB) adalah…", opsi: ["BRI", "BNI", "BPJS Ketenagakerjaan", "Bank Mandiri"], jawaban: 2 },
-        { soal: "Lembaga yang mengatur dan mengawasi kegiatan pasar modal di Indonesia adalah…", opsi: ["Bank Indonesia", "Otoritas Jasa Keuangan (OJK)", "Kementerian Keuangan", "Lembaga Penjamin Simpanan"], jawaban: 1 },
-        { soal: "Lembaga yang menjamin dana simpanan nasabah bank agar aman jika bank mengalami masalah adalah…", opsi: ["OJK", "LPS (Lembaga Penjamin Simpanan)", "Bank Indonesia", "Kemenkeu"], jawaban: 1 },
-        { soal: "Surat berharga yang menunjukkan kepemilikan sebagian perusahaan disebut...", opsi: ["Obligasi", "Saham", "Tabungan", "Deposito"], jawaban: 1 },
-        { soal: "Surat utang yang diterbitkan perusahaan atau pemerintah dengan janji pengembalian bunga adalah…", opsi: ["Saham", "Obligasi", "Cek", "Giro"], jawaban: 1 },
-        { soal: "Lembaga yang membantu mempertemukan penjual dan pembeli saham disebut…", opsi: ["Bursa Efek", "Bank Sentral", "Pegadaian", "Asuransi"], jawaban: 0 },
-        { soal: "Berikut yang bukan ciri Lembaga Keuangan Bukan Bank adalah…", opsi: ["Menerima simpanan seperti tabungan biasa", "Memberikan jasa asuransi", "Mengelola dana pensiun", "Menyediakan jasa gadai"], jawaban: 0 },
-        { soal: "Tugas utama Otoritas Jasa Keuangan (OJK) adalah…", opsi: ["Mencetak uang", "Mengatur dan mengawasi sektor jasa keuangan", "Memberikan pinjaman kepada pemerintah", "Menetapkan nilai tukar uang asing"], jawaban: 1 },
-        { soal: "BPJS Kesehatan termasuk jenis lembaga…", opsi: ["Bank Umum", "Asuransi Sosial", "Bank Sentral", "Lembaga Pembiayaan"], jawaban: 1 },
-        { soal: "Lembaga pembiayaan yang memberikan dana untuk pembelian kendaraan bermotor biasanya disebut…", opsi: ["Perusahaan Pembiayaan / Leasing", "Pegadaian", "Bank Sentral", "Dana Pensiun"], jawaban: 0 },
-        { soal: "Simpanan di bank yang penarikannya dapat dilakukan kapan saja dengan buku tabungan atau kartu ATM adalah…", opsi: ["Deposito", "Tabungan", "Giro", "Obligasi"], jawaban: 1 },
-        { soal: "Simpanan yang penarikannya hanya dapat dilakukan setelah jangka waktu tertentu adalah…", opsi: ["Tabungan", "Deposito", "Giro", "Dompet Digital"], jawaban: 1 },
-        { soal: "Simpanan yang penarikannya menggunakan cek atau bilyet giro adalah…", opsi: ["Tabungan", "Deposito", "Giro", "Emas"], jawaban: 2 },
-        { soal: "Uang yang dipinjamkan bank kepada nasabah dengan syarat pengembalian ditambah bunga disebut…", opsi: ["Tabungan", "Kredit / Pinjaman", "Devisa", "Bunga"], jawaban: 1 },
-        { soal: "Imbal jasa yang diberikan bank kepada nasabah atas simpanan uangnya disebut…", opsi: ["Bunga Tabungan", "Bunga Kredit", "Pajak", "Denda"], jawaban: 0 },
-        { soal: "Biaya tambahan yang harus dibayar nasabah kepada bank saat melunasi pinjaman adalah…", opsi: ["Bunga Tabungan", "Bunga Kredit", "Laba", "Dividen"], jawaban: 1 },
-        { soal: "Alat pembayaran nontunai berbentuk kartu yang memotong saldo tabungan langsung saat bertransaksi adalah...", opsi: ["Kartu Kredit", "Kartu Debit", "Cek", "Uang Elektronik"], jawaban: 1 },
-        { soal: "Kartu pembayaran yang memungkinkan kita berbelanja dulu dan membayar nanti adalah...", opsi: ["Kartu Debit", "Kartu Kredit", "Kartu Keluarga", "KTP"], jawaban: 1 },
-        { soal: "Contoh uang elektronik yang digunakan untuk transaksi cepat adalah...", opsi: ["Cek", "Giro", "Kartu Flazz / E-Money", "Saham"], jawaban: 2 },
-        { soal: "Dokumen perintah tertulis kepada bank untuk membayarkan sejumlah uang kepada orang yang namanya tertulis di dalamnya adalah...", opsi: ["Cek", "KTP", "Sertifikat", "Faktur"], jawaban: 0 },
-        { soal: "Keuntungan menabung di bank dibanding di rumah adalah...", opsi: ["Uang aman dan mendapat bunga", "Uang tidak bisa diambil", "Harus membayar biaya simpanan besar", "Uang akan diambil pemerintah"], jawaban: 0 },
-        { soal: "Jika kita menabung Rp1.000.000 di bank dan mendapat bunga 3% per tahun, maka bunga yang diterima adalah...", opsi: ["Rp10.000", "Rp20.000", "Rp30.000", "Rp300.000"], jawaban: 2 },
-        { soal: "Jaminan yang diserahkan saat meminjam uang di bank agar dipercaya mengembalikan disebut...", opsi: ["Bunga", "Agunan / Jaminan", "Denda", "Tabungan"], jawaban: 1 },
-        { soal: "Kredit yang diberikan untuk modal usaha disebut...", opsi: ["Kredit Konsumtif", "Kredit Produktif", "Kredit Rumah", "Kredit Kendaraan"], jawaban: 1 },
-        { soal: "Kredit yang digunakan untuk membeli barang pemenuhan kebutuhan sehari-hari disebut...", opsi: ["Kredit Produktif", "Kredit Konsumtif", "Kredit Investasi", "Kredit Umum"], jawaban: 1 },
-        { soal: "Berikut yang bukan syarat umum meminjam uang di bank adalah...", opsi: ["Memiliki identitas resmi", "Memiliki kemampuan mengembalikan", "Menyerahkan jaminan jika diperlukan", "Memberikan hadiah kepada petugas bank"], jawaban: 3 },
-        { soal: "Transaksi keuangan menggunakan gawai (HP) dan internet disebut...", opsi: ["Perbankan Digital", "Menabung di celengan", "Menyimpan emas", "Menanam saham"], jawaban: 0 },
-        { soal: "Manfaat menggunakan jasa perbankan digital adalah...", opsi: ["Transaksi lebih cepat dan mudah", "Uang hilang pasti tidak kembali", "Harus datang ke bank", "Biaya selalu lebih mahal"], jawaban: 0 },
-        { soal: "Hal yang harus dirahasiakan saat menggunakan layanan perbankan adalah...", opsi: ["Nomor PIN", "Nama lengkap", "Alamat rumah", "Nomor rekening (bagian umum)"], jawaban: 0 },
-        { soal: "Jika menerima telepon mengaku dari bank meminta nomor PIN, sikap kita sebaiknya...", opsi: ["Langsung memberitahukan", "Menolak dan melaporkan ke bank resmi", "Memberitahukan sebagian", "Bertanya kembali lalu memberi"], jawaban: 1 },
-        { soal: "Kemampuan memahami, mengelola, dan menggunakan sumber daya keuangan untuk kehidupan sejahtera disebut…", opsi: ["Literasi Finansial", "Literasi Baca", "Literasi Digital", "Literasi Lingkungan"], jawaban: 0 },
-        { soal: "Tujuan utama mengelola uang adalah…", opsi: ["Menghabiskan semua", "Memenuhi kebutuhan dan merencanakan masa depan", "Membeli barang mewah saja", "Meminjamkan ke semua orang"], jawaban: 1 },
-        { soal: "Sesuatu yang harus dipenuhi agar kita bisa hidup disebut…", opsi: ["Keinginan", "Kebutuhan", "Gaya hidup", "Hobi"], jawaban: 1 },
-        { soal: "Sesuatu yang ditambahkan untuk kepuasan, namun tidak wajib dipenuhi disebut…", opsi: ["Kebutuhan", "Keinginan", "Kewajiban", "Utang"], jawaban: 1 },
-        { soal: "Contoh kebutuhan primer adalah…", opsi: ["Makan, pakaian, tempat tinggal", "HP terbaru, tas bermerek", "Liburan ke luar negeri", "Koleksi mainan mahal"], jawaban: 0 },
-        { soal: "Perbedaan kebutuhan dan keinginan yang benar adalah…", opsi: ["Kebutuhan bisa ditunda, keinginan harus segera dipenuhi", "Kebutuhan mendesak, keinginan bisa ditunda", "Semua keinginan adalah kebutuhan", "Kebutuhan tidak penting, keinginan yang penting"], jawaban: 1 },
-        { soal: "Rencana pengelolaan pendapatan dan pengeluaran disebut…", opsi: ["Anggaran / Rencana Keuangan", "Laporan Sekolah", "Daftar Belanja Tanpa Batas", "Catatan Hiburan"], jawaban: 0 },
-        { soal: "Prinsip mengelola uang yang benar adalah…", opsi: ["Pengeluaran > Pendapatan", "Pengeluaran = Pendapatan + Utang", "Pendapatan > Pengeluaran", "Menghabiskan sisa uang"], jawaban: 2 },
-        { soal: "Langkah pertama dalam menyusun anggaran keuangan pribadi adalah…", opsi: ["Membeli barang yang diinginkan", "Menghitung jumlah pendapatan/uang yang dimiliki", "Meminjam uang dulu", "Menabung sisa saja"], jawaban: 1 },
-        { soal: "Bagian pendapatan yang disisihkan sebelum dibelanjakan disebut…", opsi: ["Menabung dulu", "Menghabiskan dulu", "Berutang dulu", "Membelanjakan semua"], jawaban: 0 },
-        { soal: "Dana yang disisihkan untuk kejadian tak terduga disebut…", opsi: ["Dana Darurat", "Dana Liburan", "Dana Belanja", "Dana Hadiah"], jawaban: 0 },
-        { soal: "Jumlah ideal dana darurat bagi pemula adalah setara pengeluaran…", opsi: ["1–3 bulan", "1 tahun", "1 hari", "10 tahun"], jawaban: 0 },
-        { soal: "Tujuan menabung jangka pendek adalah…", opsi: ["Membeli rumah 10 tahun lagi", "Pendidikan anak dewasa", "Membeli barang dalam waktu dekat", "Pensiun"], jawaban: 2 },
-        { soal: "Tujuan menabung jangka panjang adalah…", opsi: ["Membeli mainan minggu ini", "Biaya pendidikan atau persiapan masa depan", "Makan di restoran", "Membeli pakaian sekarang"], jawaban: 1 },
-        { soal: "Uang yang ditanamkan untuk mendapatkan keuntungan di masa depan disebut...", opsi: ["Investasi", "Belanja", "Utang", "Sumbangan"], jawaban: 0 },
-        { soal: "Prinsip investasi yang benar adalah...", opsi: ["Semakin tinggi keuntungan, semakin tinggi risikonya", "Tidak ada risiko sama sekali", "Pasti untung berlipat ganda dalam semalam", "Tidak perlu mempelajari dulu"], jawaban: 0 },
-        { soal: "Contoh investasi berisiko rendah adalah...", opsi: ["Menabung di bank / Deposito", "Judi daring", "Skema cepat kaya", "Spekulasi tanpa pengetahuan"], jawaban: 0 },
-        { soal: "Contoh investasi yang lebih berisiko namun berpotensi untung besar adalah...", opsi: ["Saham", "Tabungan biasa", "Deposito", "Menyimpan uang di celengan"], jawaban: 0 },
-        { soal: "Hal yang harus dihindari dalam mengelola keuangan adalah...", opsi: ["Membeli barang karena ikut-ikutan teman", "Mencatat pengeluaran", "Membuat anggaran", "Menyisihkan dana darurat"], jawaban: 0 },
-        { soal: "Sikap hemat yang benar adalah...", opsi: ["Tidak boros dan sesuai kebutuhan", "Pelit kepada diri sendiri", "Tidak mau beli apa saja", "Menghabiskan uang untuk pamer"], jawaban: 0 },
-        { soal: "Catatan masuk dan keluarnya uang disebut...", opsi: ["Buku Kas", "Buku Pelajaran", "Buku Catatan Teman", "Buku Cerita"], jawaban: 0 },
-        { soal: "Jika pendapatan Rp500.000 dan pengeluaran Rp400.000, maka sisanya adalah...", opsi: ["Rp100.000", "Rp200.000", "Rp900.000", "Rp0"], jawaban: 0 },
-        { soal: "Jika pengeluaran lebih besar dari pendapatan, maka akan terjadi…", opsi: ["Defisit / Kekurangan", "Surplus", "Keseimbangan", "Laba"], jawaban: 0 },
-        { soal: "Jika pendapatan lebih besar dari pengeluaran, maka disebut…", opsi: ["Surplus", "Defisit", "Rugi", "Utang"], jawaban: 0 },
-        { soal: "Sikap bijak saat memiliki sisa uang adalah…", opsi: ["Menabung atau berinvestasi", "Langsung dibelanjakan semua", "Diberikan semuanya", "Disimpan di tempat tersembunyi tanpa tujuan"], jawaban: 0 },
-        { soal: "Sebelum membeli barang mahal, sebaiknya…", opsi: ["Menunda dan mempertimbangkan kebutuhannya", "Langsung beli sebelum naik harga", "Meminjam uang teman", "Menggunakan utang"], jawaban: 0 },
-        { soal: "Berikut yang bukan termasuk cara menghemat uang saku adalah…", opsi: ["Membawa bekal dari rumah", "Mencatat pengeluaran harian", "Membeli semua jajanan yang ada", "Menyisihkan sebagian untuk ditabung"], jawaban: 2 },
-        { soal: "Manfaat memiliki asuransi bagi keluarga adalah…", opsi: ["Membantu meringankan biaya jika terjadi risiko", "Uang tidak bisa diambil lagi", "Menambah pengeluaran setiap hari", "Membeli barang mahal"], jawaban: 0 },
-        { soal: "Mengapa kita harus belajar mengelola keuangan sejak dini?", opsi: ["Agar terbiasa hidup tertib dan sejahtera di masa depan", "Agar bisa kaya dengan cepat", "Agar tidak berbagi dengan orang lain", "Agar tidak perlu bekerja"], jawaban: 0 },
-        { soal: "Tindakan yang menunjukkan sikap bertanggung jawab atas uang adalah...", opsi: ["Menggunakan sesuai rencana dan mencatatnya", "Menghabiskan untuk kesenangan", "Meminjam lalu lupa mengembalikan", "Membelikan barang untuk pamer"], jawaban: 0 },
-        { soal: "Uang yang kita miliki jumlah terbatas, maka kita harus…", opsi: ["Memilih prioritas kebutuhan", "Meminta tambahan terus-menerus", "Membeli semua keinginan", "Mengabaikan kebutuhan"], jawaban: 0 },
-        { soal: "Utang sebaiknya diambil untuk…", opsi: ["Kebutuhan mendesak yang penting dan mampu dibayar", "Gaya hidup mewah", "Barang yang tidak perlu", "Berjudi"], jawaban: 0 },
-        { soal: "Saat berutang, kewajiban kita adalah…", opsi: ["Mengembalikan tepat waktu sesuai kesepakatan", "Menunda sesuka hati", "Menghindari pemberi pinjaman", "Meminjam lagi sebelum lunas"], jawaban: 0 },
-        { soal: "Berikut yang termasuk pengeluaran tetap keluarga adalah…", opsi: ["Biaya sewa rumah / cicilan rumah", "Jajan harian", "Hadiah ulang tahun", "Liburan"], jawaban: 0 },
-        { soal: "Pengeluaran yang jumlahnya berubah-ubah disebut…", opsi: ["Pengeluaran Tidak Tetap", "Pengeluaran Tetap", "Pendapatan Tetap", "Tabungan"], jawaban: 0 },
-        { soal: "Langkah bijak jika ingin membeli barang yang belum mampu dibeli tunai adalah…", opsi: ["Menabung sampai cukup dulu", "Mengutang tanpa hitungan", "Memaksa orang lain membelikan", "Mengambil uang tabungan orang lain"], jawaban: 0 },
-        { soal: "Pernyataan yang benar tentang keuangan adalah...", opsi: ["Menabung lebih baik daripada berutang untuk konsumsi", "Semua utang itu buruk", "Menabung tidak berguna", "Keuangan urusan orang dewasa saja"], jawaban: 0 },
-        { soal: "Sikap kritis terhadap tawaran investasi dengan keuntungan luar biasa cepat adalah...", opsi: ["Waspada, kemungkinan penipuan", "Langsung ikut agar kaya", "Mengajak semua teman ikut", "Meminjam uang untuk ikut"], jawaban: 0 },
-        { soal: "Membagikan uang saku ke amplop berbeda (makan, tabungan, sumbangan) adalah contoh…", opsi: ["Penganggaran Sederhana", "Menghabiskan Uang", "Menyembunyikan Uang", "Membagi Uang ke Teman"], jawaban: 0 },
-        { soal: "Tujuan akhir mempelajari literasi finansial adalah...", opsi: ["Mencapai kesejahteraan hidup secara mandiri", "Menjadi orang terkaya di dunia", "Tidak perlu berbagi dengan orang lain", "Menghindari semua pengeluaran"], jawaban: 0 }
+        { soal: "Menurut Kosasih & Wibowo (2020), teks diskusi adalah teks yang menyajikan sejumlah pendapat dari...", opsi: ["Satu sudut pandang saja", "Sejumlah sudut pandang", "Pendapat penulis saja", "Pendapat ahli saja"], jawaban: 1 },
+        { soal: "Dalam ragam bahasa tulis, teks diskusi sering dijumpai dalam wujud...", opsi: ["Puisi", "Cerpen", "Artikel", "Pantun"], jawaban: 2 },
+        { soal: "Teks diskusi diakhiri dengan suatu simpulan yang dianggap tepat oleh penulis sebagai...", opsi: ["Pertanyaan", "Solusi atau jawaban", "Masalah baru", "Kritik"], jawaban: 1 },
+        { soal: "Diskusi adalah pertemuan ilmiah untuk bertukar pikiran dan pendapat sebagai respons dari...", opsi: ["Suatu kebahagiaan", "Suatu masalah", "Suatu pujian", "Suatu hiburan"], jawaban: 1 },
+        { soal: "Berikut yang BUKAN merupakan ciri teks diskusi adalah...", opsi: ["Terdapat isu", "Terdapat dua argumen", "Memiliki resolusi", "Hanya berisi satu pendapat"], jawaban: 3 },
+        { soal: "Mengapa teks diskusi harus memiliki isu?", opsi: ["Agar pembaca bingung", "Untuk menetapkan arah diskusi", "Untuk memperpanjang teks", "Agar penulis terlihat pintar"], jawaban: 1 },
+        { soal: "Apa manfaat memiliki dua argumen (pro dan kontra) dalam teks diskusi?", opsi: ["Membuat pembaca memihak", "Memberikan perspektif yang beragam", "Membuat teks lebih pendek", "Menunjukkan penulis serba tahu"], jawaban: 1 },
+        { soal: "Rangkuman singkat dan penilaian akhir terhadap isu yang dibahas disebut...", opsi: ["Isu", "Argumen", "Resolusi", "Orientasi"], jawaban: 2 },
+        { soal: "Topik yang dibahas pada contoh teks pertama (halaman 8) adalah...", opsi: ["Larangan membawa HP ke sekolah", "Penerapan jam malam bagi remaja", "Kebijakan ujian nasional", "Penggunaan seragam sekolah"], jawaban: 1 },
+        { soal: "Pada teks tentang jam malam, pihak 'pro' menilai jam malam dapat menekan...", opsi: ["Prestasi belajar", "Kejahatan jalanan dan tawuran", "Kegiatan ekstrakurikuler", "Biaya pendidikan"], jawaban: 1 },
+        { soal: "Pada teks tentang jam malam, pihak 'kontra' menganggap kebijakan ini...", opsi: ["Sangat efektif", "Terlalu mengekang", "Sangat murah", "Mudah diterapkan"], jawaban: 1 },
+        { soal: "Resolusi dari teks tentang kebijakan jam malam adalah...", opsi: ["Jam malam harus dihapus", "Jam malam harus diperketat", "Jam malam perlu diterapkan secara fleksibel", "Jam malam hanya untuk orang dewasa"], jawaban: 2 },
+        { soal: "Topik yang dibahas pada contoh teks kedua (halaman 9) adalah...", opsi: ["Pola makan sehat", "Intensitas latihan fisik", "Cara belajar efektif", "Teknik bermain musik"], jawaban: 1 },
+        { soal: "Contoh latihan intensitas tinggi menurut teks adalah...", opsi: ["Jalan kaki dan yoga", "HIIT atau angkat beban", "Berenang santai", "Meditasi"], jawaban: 1 },
+        { soal: "Resolusi dari teks tentang latihan fisik adalah...", opsi: ["Latihan berat selalu lebih baik", "Latihan ringan tidak berguna", "Pilihan terbaik tergantung pada tujuan, usia, dan kondisi fisik", "Semua orang harus melakukan HIIT"], jawaban: 2 },
+        { soal: "Tujuan dari teks diskusi adalah...", opsi: ["Menemukan solusi permasalahan", "Meyakinkan pembaca", "Memenangkan argumen", "Menghibur pembaca"], jawaban: 0 },
+        { soal: "Tujuan dari teks argumentasi adalah...", opsi: ["Menemukan solusi", "Meyakinkan pembaca terhadap isu", "Memenangkan argumen", "Menceritakan pengalaman"], jawaban: 1 },
+        { soal: "Tujuan dari debat adalah...", opsi: ["Menemukan solusi", "Meyakinkan pembaca", "Memenangkan argumen", "Menyampaikan cerita"], jawaban: 2 },
+        { soal: "Bentuk teks diskusi dan teks argumentasi adalah...", opsi: ["Lisan", "Tulisan", "Gerakan", "Gambar"], jawaban: 1 },
+        { soal: "Bentuk dari debat adalah...", opsi: ["Tulisan", "Lisan", "Simbol", "Isyarat"], jawaban: 1 },
+        { soal: "Hasil yang diharapkan dari sebuah debat adalah...", opsi: ["Kesepakatan", "Keyakinan", "Kemenangan", "Persahabatan"], jawaban: 2 },
+        { soal: "Sifat teks diskusi adalah...", opsi: ["Subjektif", "Objektif/netral", "Kompetitif", "Persuasif"], jawaban: 1 },
+        { soal: "Sifat teks argumentasi adalah...", opsi: ["Objektif", "Persuasif", "Kompetitif", "Netral"], jawaban: 1 },
+        { soal: "Sifat debat adalah...", opsi: ["Objektif", "Persuasif", "Kompetitif", "Netral"], jawaban: 2 },
+        { soal: "Struktur penyusun teks diskusi adalah...", opsi: ["Orientasi - Komplikasi - Resolusi", "Isu - Argumen - Resolusi", "Pembuka - Isi - Penutup", "Abstrak - Orientasi - Koda"], jawaban: 1 },
+        { soal: "Bagian teks diskusi yang berisi latar belakang masalah adalah...", opsi: ["Argumen", "Isu", "Resolusi", "Kesimpulan"], jawaban: 1 },
+        { soal: "Bagian teks diskusi yang berisi gagasan dan bukti pendukung disebut...", opsi: ["Isu", "Argumen", "Resolusi", "Orientasi"], jawaban: 1 },
+        { soal: "Bagian akhir teks diskusi yang berisi kesimpulan dan saran adalah...", opsi: ["Isu", "Argumen", "Resolusi", "Komplikasi"], jawaban: 2 },
+        { soal: "Berikut yang termasuk dalam bagian 'Isu' pada struktur teks adalah...", opsi: ["Gagasan dan bukti", "Latar belakang masalah dan pengenalan", "Saran dan aksi nyata", "Kesimpulan"], jawaban: 1 },
+        { soal: "Berikut yang termasuk dalam bagian 'Argumen' adalah...", opsi: ["Latar belakang masalah", "Gagasan dan bukti pendukung", "Saran", "Pengenalan"], jawaban: 1 },
+        { soal: "Berikut yang termasuk dalam bagian 'Kesimpulan/Resolusi' adalah...", opsi: ["Latar belakang masalah", "Gagasan", "Saran dan aksi nyata", "Pengenalan"], jawaban: 2 },
+        { soal: "Dalam perbandingan teks, teks diskusi menghasilkan...", opsi: ["Keyakinan", "Kemenangan", "Kesepakatan", "Pertengkaran"], jawaban: 2 },
+        { soal: "Dalam perbandingan teks, teks argumentasi menghasilkan...", opsi: ["Kesepakatan", "Keyakinan", "Kemenangan", "Solusi"], jawaban: 1 },
+        { soal: "Perbedaan utama antara teks diskusi dan debat adalah...", opsi: ["Teks diskusi lisan, debat tulisan", "Teks diskusi tulisan, debat lisan", "Keduanya tulisan", "Keduanya lisan"], jawaban: 1 },
+        { soal: "Teks diskusi bersifat netral, sedangkan debat bersifat...", opsi: ["Netral", "Objektif", "Kompetitif", "Santai"], jawaban: 2 },
+        { soal: "Topik utama dari contoh teks pada halaman 16-20 adalah...", opsi: ["Bahaya narkoba", "Penggunaan plastik", "Pentingnya belajar", "Manfaat teknologi"], jawaban: 1 },
+        { soal: "Mengapa plastik banyak digunakan menurut teks tersebut?", opsi: ["Mahal dan sulit dibentuk", "Fleksibel, murah, dan proses cepat", "Berat dan kuat", "Langka dan berharga"], jawaban: 1 },
+        { soal: "Pada tahun berapa permintaan plastik meningkat untuk membuat perangkat telepon pintar menurut teks?", opsi: ["2010", "2015", "2020", "2025"], jawaban: 2 },
+        { soal: "Berikut yang BUKAN dampak buruk penggunaan plastik masif bagi lingkungan adalah...", opsi: ["Mencemari tanah", "Menyumbat saluran air", "Menyuburkan tanaman", "Mengancam ekosistem laut"], jawaban: 2 },
+        { soal: "Berapa lama waktu yang dibutuhkan plastik untuk hancur secara alami?", opsi: ["1-5 tahun", "10-20 tahun", "Puluhan hingga ratusan tahun", "1 bulan"], jawaban: 2 },
+        { soal: "Pecahan plastik yang berbahaya jika masuk ke rantai makanan disebut...", opsi: ["Bioplastik", "Mikroplastik", "Termoplastik", "Ekoplastik"], jawaban: 1 },
+        { soal: "Kalimat 'Pernahkah kalian menyadari bahwa sekitar kalian dikelilingi oleh plastik?' merupakan bagian dari struktur...", opsi: ["Argumen", "Isu/Pengenalan", "Resolusi", "Kesimpulan"], jawaban: 1 },
+        { soal: "Paragraf yang menjelaskan tentang kemudahan dan keunggulan plastik termasuk dalam argumen...", opsi: ["Kontra", "Pro", "Netral", "Resolusi"], jawaban: 1 },
+        { soal: "Paragraf yang menjelaskan tentang dampak buruk plastik bagi lingkungan termasuk dalam argumen...", opsi: ["Pro", "Kontra", "Netral", "Isu"], jawaban: 1 },
+        { soal: "Kata 'Namun' pada halaman 19 menandakan peralihan ke argumen...", opsi: ["Pro", "Kontra", "Resolusi", "Kesimpulan"], jawaban: 1 },
+        { soal: "Contoh perangkat yang menggunakan plastik berdasarkan teks adalah...", opsi: ["Buku", "Telepon pintar", "Kayu", "Batu"], jawaban: 1 },
+        { soal: "Mengapa teknologi bisa tertinggal jika tidak menggunakan plastik menurut teks?", opsi: ["Plastik adalah solusi praktis untuk perkembangan teknologi", "Plastik tidak berguna", "Plastik mahal", "Plastik sulit didapat"], jawaban: 0 },
+        { soal: "Apakah teks tentang plastik bersifat memihak?", opsi: ["Ya, memihak pro", "Ya, memihak kontra", "Tidak, menyajikan dua sisi secara objektif", "Tidak, karena tidak ada argumen"], jawaban: 2 },
+        { soal: "Bukti yang mendukung argumen bahwa plastik mencemari laut adalah...", opsi: ["Plastik mudah terurai", "Penumpukan sampah plastik bermuara di lautan", "Plastik bisa dimakan ikan", "Plastik larut dalam air"], jawaban: 1 },
+        { soal: "Bagaimana plastik dapat mengganggu kesehatan manusia?", opsi: ["Melalui udara", "Melalui mikroplastik dalam rantai makanan", "Melalui sentuhan", "Melalui suara"], jawaban: 1 },
+        { soal: "Apa fungsi utama dari bagian 'Aksi Nyata' dalam resolusi?", opsi: ["Memberikan solusi konkret", "Menambah panjang teks", "Membingungkan pembaca", "Mengulang isu"], jawaban: 0 },
+        { soal: "Apakah teks diskusi harus selalu menyertakan data atau contoh?", opsi: ["Tidak perlu", "Ya, untuk mendukung argumen", "Hanya jika diminta", "Hanya di bagian akhir"], jawaban: 1 },
+        { soal: "Sinonim dari kata 'isu' dalam konteks teks diskusi adalah...", opsi: ["Solusi", "Masalah", "Kesimpulan", "Pujian"], jawaban: 1 },
+        { soal: "Apa yang membedakan teks diskusi dengan teks eksposisi?", opsi: ["Teks diskusi satu arah, eksposisi dua arah", "Teks diskusi dua sudut pandang, eksposisi cenderung satu arah", "Keduanya sama", "Teks diskusi fiksi, eksposisi non-fiksi"], jawaban: 1 },
+        { soal: "Bagian teks diskusi yang berisi 'pengenalan' termasuk dalam...", opsi: ["Isu", "Argumen", "Resolusi", "Kesimpulan"], jawaban: 0 },
+        { soal: "Kaidah kebahasaan yang menonjol dalam teks diskusi adalah penggunaan...", opsi: ["Konjungsi pertentangan", "Kata sifat", "Kalimat tanya", "Pantun"], jawaban: 0 },
+        { soal: "Mengapa teks diskusi harus menggunakan bahasa yang objektif?", opsi: ["Agar tidak memihak", "Agar terlihat sulit", "Agar pembaca bosan", "Agar penulis terkenal"], jawaban: 0 },
+        { soal: "Contoh konjungsi yang digunakan untuk menyatakan argumen kontra adalah...", opsi: ["Sebaliknya", "Selain itu", "Oleh karena itu", "Dengan demikian"], jawaban: 0 },
+        { soal: "Contoh konjungsi yang digunakan untuk menyatakan argumen pro adalah...", opsi: ["Namun", "Sebaliknya", "Selain itu", "Akan tetapi"], jawaban: 2 },
+        { soal: "Fungsi kata 'karena' dalam teks diskusi adalah...", opsi: ["Menyatakan akibat", "Menyatakan sebab", "Menyatakan pertentangan", "Menyatakan tujuan"], jawaban: 1 },
+        { soal: "Langkah pertama menyusun teks diskusi adalah...", opsi: ["Menulis resolusi", "Menentukan isu", "Menulis argumen", "Menyimpulkan"], jawaban: 1 },
+        { soal: "Praktik menyajikan teks diskusi secara lisan dengan santun disebut...", opsi: ["Simulasi diskusi lisan", "Membaca puisi", "Berpidato", "Bercerita"], jawaban: 0 },
+        { soal: "Mengapa sikap santun penting dalam diskusi lisan?", opsi: ["Agar diskusi berjalan lancar dan menghargai pendapat", "Agar terlihat lemah", "Agar menang debat", "Agar cepat selesai"], jawaban: 0 },
+        { soal: "Apakah teks diskusi boleh menggunakan kata ganti orang pertama (saya/aku)?", opsi: ["Boleh", "Sebaiknya tidak, karena harus objektif", "Harus", "Wajib"], jawaban: 1 },
+        { soal: "Kata kerja mental yang sering muncul dalam teks diskusi adalah...", opsi: ["Berlari, makan", "Menilai, menganggap", "Tidur, bangun", "Menulis, membaca"], jawaban: 1 },
+        { soal: "Data, fakta, atau contoh yang memperkuat gagasan disebut...", opsi: ["Isu", "Bukti pendukung", "Resolusi", "Orientasi"], jawaban: 1 },
+        { soal: "Cara menulis resolusi yang baik adalah...", opsi: ["Merangkum kedua sudut pandang dan memberi solusi seimbang", "Memihak satu sisi", "Menambah masalah", "Menghapus argumen"], jawaban: 0 },
+        { soal: "Perbedaan antara argumen dan opini adalah...", opsi: ["Argumen didukung bukti, opini subjektif", "Argumen subjektif, opini didukung bukti", "Keduanya sama", "Keduanya tidak perlu bukti"], jawaban: 0 },
+        { soal: "Contoh kalimat resolusi untuk topik 'jam malam' adalah...", opsi: ["Jam malam harus dihapus", "Kebijakan jam malam sebaiknya diterapkan secara fleksibel", "Remaja tidak boleh keluar malam", "Orang tua harus mengunci anak"], jawaban: 1 },
+        { soal: "Mengapa teks diskusi perlu memiliki simpulan?", opsi: ["Untuk memberikan penilaian akhir dan solusi", "Untuk memperpanjang teks", "Untuk mengulang isu", "Untuk membingungkan pembaca"], jawaban: 0 },
+        { soal: "Isu yang dibahas pada teks tentang jam malam adalah...", opsi: ["Penerapan jam malam bagi remaja", "Larangan bermain", "Kebijakan sekolah", "Jam belajar"], jawaban: 0 },
+        { soal: "Argumen pro dari teks tentang jam malam adalah...", opsi: ["Menekan kejahatan jalanan", "Membatasi ruang gerak", "Mengekang remaja", "Mengganggu belajar"], jawaban: 0 },
+        { soal: "Argumen kontra dari teks tentang jam malam adalah...", opsi: ["Menekan tawuran", "Membatasi ruang gerak positif remaja", "Membantu istirahat", "Mengurangi kejahatan"], jawaban: 1 },
+        { soal: "Resolusi berdasarkan teks tentang jam malam adalah...", opsi: ["Jam malam dihapus", "Jam malam diperketat", "Jam malam fleksibel dengan pengecualian edukatif", "Jam malam untuk semua usia"], jawaban: 2 },
+        { soal: "Paragraf yang berisi argumen pro tentang 'Belajar Kelompok' adalah...", opsi: ["Belajar kelompok bermanfaat karena siswa dapat saling bertukar pikiran", "Belajar kelompok tidak efektif", "Belajar kelompok hanya membuang waktu", "Belajar kelompok membuat siswa malas"], jawaban: 0 },
+        { soal: "Paragraf yang berisi argumen kontra tentang 'Belajar Kelompok' adalah...", opsi: ["Belajar kelompok sangat bermanfaat", "Belajar kelompok bisa tidak efektif jika anggotanya tidak fokus", "Belajar kelompok meningkatkan prestasi", "Belajar kelompok menyenangkan"], jawaban: 1 },
+        { soal: "Urutan struktur teks diskusi yang benar adalah...", opsi: ["Argumen - Isu - Resolusi", "Isu - Argumen - Resolusi", "Resolusi - Isu - Argumen", "Isu - Resolusi - Argumen"], jawaban: 1 },
+        { soal: "Teks diskusi adalah teks yang membahas suatu masalah dari...", opsi: ["Satu sudut pandang", "Dua sudut pandang berbeda", "Tiga sudut pandang", "Semua sudut pandang"], jawaban: 1 },
+        { soal: "Contoh judul teks diskusi yang sesuai dengan tema lingkungan adalah...", opsi: ["Cara Membuat Kue", "Penggunaan Kantong Plastik Sekali Pakai: Efektifkah?", "Petualangan di Hutan", "Sejarah Kemerdekaan"], jawaban: 1 },
+        { soal: "Kemampuan menulis teks diskusi penting bagi siswa kelas IX karena...", opsi: ["Melatih berpikir kritis dan menyampaikan pendapat secara objektif", "Agar bisa tidur", "Untuk menghafal", "Agar cepat kaya"], jawaban: 0 }
     ];
 
-    const container = document.getElementById('soalContainer');
-    const form = document.getElementById('kuisForm');
-    const hasilDiv = document.getElementById('hasil');
-    const cekBtn = document.getElementById('cekBtn');
-
-    // Render soal
-    function renderSoal() {
-        let html = '';
-        soalData.forEach((item, index) => {
-            const nomor = index + 1;
-            html += `<div class="soal-item" data-index="${index}">`;
-            html += `<div class="soal-text"><span class="soal-number">${nomor}.</span> ${item.soal}</div>`;
-            html += `<div class="options">`;
-            item.opsi.forEach((opsi, optIdx) => {
-                const label = String.fromCharCode(65 + optIdx); // A, B, C, D
-                html += `<label class="option">
-                            <input type="radio" name="q${index}" value="${optIdx}" data-qindex="${index}">
-                            <span>${label}. ${opsi}</span>
-                         </label>`;
-            });
-            html += `</div></div>`;
-        });
-        container.innerHTML = html;
+    // ==================== FUNGSI ACAK ====================
+    function shuffleArray(arr) {
+        for (let i = arr.length - 1; i > 0; i--) {
+            const j = Math.floor(Math.random() * (i + 1));
+            [arr[i], arr[j]] = [arr[j], arr[i]];
+        }
+        return arr;
     }
 
-    // Cek jawaban
-    function cekJawaban() {
-        const inputs = form.querySelectorAll('input[type="radio"]:checked');
-        const jawabanUser = {};
-        inputs.forEach(input => {
-            const qIndex = parseInt(input.dataset.qindex);
-            jawabanUser[qIndex] = parseInt(input.value);
+    // ==================== RENDER SOAL ====================
+    function renderSoal() {
+        const container = document.getElementById('soalContainer');
+        container.innerHTML = '';
+
+        const shuffledSoal = shuffleArray([...soalData]);
+
+        shuffledSoal.forEach((item, index) => {
+            const opsiAsli = item.opsi.map((teks, i) => ({ teks, indexAsli: i }));
+            const opsiAcak = shuffleArray([...opsiAsli]);
+            
+            const jawabanBenarIndex = opsiAcak.findIndex(o => o.indexAsli === item.jawaban);
+
+            const soalDiv = document.createElement('div');
+            soalDiv.className = 'soal-item';
+            soalDiv.innerHTML = `
+                <div class="soal-text">
+                    <span class="soal-number">${index + 1}.</span>
+                    <span>${item.soal}</span>
+                </div>
+                <div class="options">
+                    ${opsiAcak.map((opt, i) => `
+                        <label class="option">
+                            <input type="radio" name="soal_${index}" value="${i}" data-benar="${jawabanBenarIndex}">
+                            <span>${String.fromCharCode(65 + i)}. ${opt.teks}</span>
+                        </label>
+                    `).join('')}
+                </div>
+            `;
+            container.appendChild(soalDiv);
         });
+    }
 
+    // ==================== CEK JAWABAN ====================
+    function cekJawaban() {
+        const soalItems = document.querySelectorAll('.soal-item');
         let benar = 0;
-        let total = soalData.length;
+        let salah = 0;
+        let kosong = 0;
 
-        soalData.forEach((item, idx) => {
-            const userAns = jawabanUser[idx];
-            if (userAns !== undefined && userAns === item.jawaban) {
-                benar++;
+        soalItems.forEach((item) => {
+            const radios = item.querySelectorAll('input[type="radio"]');
+            const dipilih = Array.from(radios).find(r => r.checked);
+            
+            if (!dipilih) {
+                kosong++;
+                item.style.borderColor = '#e9eef4';
+                item.style.backgroundColor = '#ffffff';
+            } else {
+                const jawabanBenar = dipilih.dataset.benar;
+                const jawabanUser = dipilih.value;
+                if (jawabanUser === jawabanBenar) {
+                    benar++;
+                    item.style.borderColor = '#1d6b3f';
+                    item.style.backgroundColor = '#f0fdf4';
+                } else {
+                    salah++;
+                    item.style.borderColor = '#b13e3e';
+                    item.style.backgroundColor = '#fef2f2';
+                }
             }
         });
 
-        const persen = Math.round((benar / total) * 100);
-        let pesan = '';
-        if (persen >= 90) pesan = '🌟 Luar biasa! Pemahamanmu sangat baik.';
-        else if (persen >= 70) pesan = '👍 Bagus! Tingkatkan lagi sedikit.';
-        else if (persen >= 50) pesan = '📖 Cukup baik, pelajari kembali materi yang belum dikuasai.';
-        else pesan = '💪 Jangan menyerah! Coba baca ulang materi dan kerjakan lagi.';
-
-        let detailHtml = `<div class="skor">Skor: ${benar} / ${total} (${persen}%)</div>`;
-        detailHtml += `<div>${pesan}</div>`;
-
-        // Daftar jawaban benar vs salah per nomor
-        let rincian = '<div style="margin-top:14px;font-size:0.95rem;"><strong>Rincian jawaban:</strong><ul style="margin-top:8px; list-style:none; display:flex; flex-wrap:wrap; gap:6px 14px;">';
-        soalData.forEach((item, idx) => {
-            const userAns = jawabanUser[idx];
-            const isCorrect = (userAns !== undefined && userAns === item.jawaban);
-            const statusClass = isCorrect ? 'detail-benar' : 'detail-salah';
-            const statusText = isCorrect ? '✓' : '✗';
-            const nomor = idx + 1;
-            rincian += `<li class="${statusClass}" style="font-size:0.9rem;">${nomor}. ${statusText}</li>`;
-        });
-        rincian += '</ul></div>';
-
-        hasilDiv.innerHTML = detailHtml + rincian;
+        const total = soalItems.length;
+        const skor = Math.round((benar / total) * 100);
+        
+        const hasilDiv = document.getElementById('hasil');
+        hasilDiv.innerHTML = `
+            <div class="skor">Skor: ${skor} / 100</div>
+            <div>Benar: <span style="color:#1d6b3f;font-weight:700;">${benar}</span> | 
+                 Salah: <span style="color:#b13e3e;font-weight:700;">${salah}</span> | 
+                 Kosong: <span style="color:#6a7e96;font-weight:700;">${kosong}</span></div>
+            <div style="margin-top:8px;font-size:0.95rem;color:#4a5f7a;">Total ${total} soal</div>
+        `;
         hasilDiv.classList.add('show');
     }
 
-    // Event listener
-    cekBtn.addEventListener('click', (e) => {
-        e.preventDefault();
-        cekJawaban();
-        // Scroll ke hasil
-        hasilDiv.scrollIntoView({ behavior: 'smooth', block: 'center' });
-    });
+    // ==================== ACAK ULANG ====================
+    function acakUlang() {
+        renderSoal();
+        document.getElementById('hasil').classList.remove('show');
+        document.getElementById('hasil').innerHTML = '';
+        document.querySelectorAll('.soal-item').forEach(item => {
+            item.style.borderColor = '#e9eef4';
+            item.style.backgroundColor = '#ffffff';
+        });
+    }
 
-    // Inisialisasi
+    // ==================== EVENT LISTENER ====================
+    document.getElementById('cekBtn').addEventListener('click', cekJawaban);
+    document.getElementById('shuffleBtn').addEventListener('click', acakUlang);
+
+    // Render awal
     renderSoal();
-
-    // Opsional: reset hasil jika ada perubahan jawaban
-    form.addEventListener('change', () => {
-        hasilDiv.classList.remove('show');
-        hasilDiv.innerHTML = '';
-    });
-
-    // Mencegah form submit reload
-    form.addEventListener('submit', (e) => e.preventDefault());
 </script>
 </body>
 </html>
