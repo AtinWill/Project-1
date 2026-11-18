@@ -1,0 +1,158 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Latihan Soal Teks Diskusi</title>
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; font-family: 'Segoe UI', Roboto, system-ui, sans-serif; }
+        body { background: linear-gradient(145deg, #f0f4fa 0%, #e2e9f2 100%); padding: 24px 16px; display: flex; flex-direction: column; align-items: center; }
+        .container { max-width: 900px; width: 100%; background: rgba(255, 255, 255, 0.9); backdrop-filter: blur(4px); border-radius: 32px; box-shadow: 0 20px 40px -12px rgba(0, 20, 40, 0.25); padding: 32px 28px; border: 1px solid #ffffff80; }
+        h1 { font-size: 1.9rem; font-weight: 600; color: #1a2e4b; text-align: center; margin-bottom: 8px; letter-spacing: -0.02em; }
+        .subhead { text-align: center; color: #4a5f7a; margin-bottom: 28px; font-size: 1rem; border-bottom: 2px dashed #b8c9dd; padding-bottom: 16px; }
+        .soal-item { background: #ffffff; border-radius: 20px; padding: 18px 22px; margin-bottom: 14px; box-shadow: 0 2px 8px rgba(0, 20, 30, 0.04); border: 1px solid #e9eef4; transition: all 0.1s; }
+        .soal-item:hover { border-color: #b7c9e0; box-shadow: 0 6px 14px rgba(0, 40, 70, 0.06); }
+        .soal-text { font-weight: 600; color: #0b1e33; margin-bottom: 12px; font-size: 1rem; line-height: 1.5; display: flex; gap: 8px; }
+        .soal-number { color: #2c5f9a; font-weight: 700; min-width: 26px; }
+        .options { display: flex; flex-wrap: wrap; gap: 8px 16px; padding-left: 6px; }
+        .option { display: flex; align-items: flex-start; gap: 8px; font-size: 0.95rem; color: #1e2f44; cursor: pointer; padding: 6px 12px 6px 8px; border-radius: 16px; transition: background 0.15s; border: 1px solid transparent; line-height: 1.4; }
+        .option:hover { background: #eef4fd; border-color: #c7d9f0; }
+        .option input[type="radio"] { appearance: none; width: 18px; height: 18px; border: 2px solid #8aa0bc; border-radius: 50%; display: inline-flex; align-items: center; justify-content: center; transition: 0.1s; flex-shrink: 0; cursor: pointer; margin-top: 2px; }
+        .option input[type="radio"]:checked { border-color: #1f6ed4; background: #1f6ed4; box-shadow: inset 0 0 0 4px white; }
+        .option input[type="radio"]:focus-visible { outline: 2px solid #1f6ed4; outline-offset: 2px; }
+        .btn-cek { display: block; width: 100%; margin-top: 32px; padding: 18px 10px; background: #1a3f66; color: white; font-size: 1.25rem; font-weight: 700; border: none; border-radius: 60px; cursor: pointer; letter-spacing: 0.3px; box-shadow: 0 12px 24px -8px #1a3f6690; transition: all 0.2s ease; border: 1px solid #ffffff30; }
+        .btn-cek:hover { background: #0f2d4b; transform: scale(1.01); }
+        .btn-cek:active { transform: scale(0.99); }
+        .hasil { margin-top: 24px; padding: 18px 22px; border-radius: 20px; background: #eaf1fb; border-left: 6px solid #1f6ed4; font-weight: 500; color: #0b2a46; display: none; font-size: 1.05rem; }
+        .hasil.show { display: block; }
+        .skor { font-size: 1.4rem; font-weight: 700; color: #0a2b4b; margin-bottom: 8px; }
+        .footer-note { margin-top: 18px; text-align: center; color: #6a7e96; font-size: 0.85rem; }
+        .btn-shuffle { display: block; width: 100%; margin-top: 14px; padding: 12px 10px; background: #eaf1fb; color: #1a3f66; font-size: 1rem; font-weight: 600; border: 2px solid #c2d6ef; border-radius: 60px; cursor: pointer; transition: all 0.2s ease; }
+        .btn-shuffle:hover { background: #d8e6fa; border-color: #9ebde3; }
+        @media (max-width: 600px) { .container { padding: 22px 16px; } h1 { font-size: 1.5rem; } .soal-item { padding: 14px 16px; } .options { flex-direction: column; gap: 4px; } .option { padding: 6px 8px; } }
+    </style>
+</head>
+<body>
+<div class="container">
+    <h1>📚 Latihan Soal</h1>
+    <div class="subhead">Teks Diskusi · Pilihan Ganda</div>
+    <form id="kuisForm"><div id="soalContainer"></div></form>
+    <button class="btn-cek" id="cekBtn">✅ CEK JAWABAN</button>
+    <button class="btn-shuffle" id="shuffleBtn">🔄 ACAK ULANG SOAL</button>
+    <div id="hasil" class="hasil"></div>
+    <div class="footer-note">Pilih satu jawaban yang paling tepat. Soal & pilihan diacak setiap refresh.</div>
+</div>
+
+<script>
+const soalData = [{ soal: "Kalimat yang tepat untuk menyampaikan saran dalam suatu diskusi adalah ...", opsi: ["Saudara penyaji, sebaiknya kita mencari jalan keluar agar minat baca di kalangan siswa terus meningkat", "Saya sangat setuju kalau siswa diberi kewajiban membaca sebuah buku yang harus diselesaikan dua minggu", "Semua guru memiliki kewajiban menyukseskan gerakan giat membaca", "Peran orang tua sangat besar untuk menyukseskan gerakan giat membaca, karena membaca merupakan jendela pengetahuan"], jawaban: 0 },
+    { soal: "Hal yang perlu dikerjakan oleh seorang narasumber dalam diskusi tertera di bawah ini, kecuali ...", opsi: ["Menjawab tanggapan-tanggapan peserta diskusi", "Membuat notulen tentang jalannya seminar", "Menyampaikan salam pembukaan", "Tidak membacakan makalah karena telah dibagikan sebelumnya"], jawaban: 1 },
+    { soal: "Berikut ini merupakan tujuan teks diskusi, kecuali ...", opsi: ["Menyampaikan gagasan dan argumen dari semua sisi dievaluasi sebelum menentukan keputusan.", "Menyajikan pendapat, sudut pandang, atau perspektif yang sama terhadap suatu permasalahan.", "Memaparkan pendapat terhadap suatu gagasan dari dua sisi, yang mendukung dan yang bertentangan.", "Menguji topik yang kontroversial, menggunakan argumen dari berbagai sudut pandang."], jawaban: 1 },
+    { soal: "Seseorang yang akan menyampaikan pendapat perlu mengingat beberapa hal berikut, kecuali ...", opsi: ["Menggunakan fakta, ilustrasi, contoh, dan kesaksian", "Menyajikan dengan menarik, baik isi maupun bahasanya", "Menggunakan kecepatan tinggi dan memberikan penekanan pada bagian penting", "Menyampaikan dengan jelas, sistematis, dan logis"], jawaban: 2 },
+    { soal: "Yang merupakan tujuan dari sebuah teks diskusi adalah ...", opsi: ["Mencapai kesepakatan gagasan atau pendapat, diskusi melibatkan kelompok", "Menyampaikan informasi faktual dan nyata", "Menyampaikan informasi faktual dan nyata", "Mengulas atau evaluasi karya sastra dan non sastra"], jawaban: 0 },
+    { soal: "Jika hendak mengungkapkan pendapat dalam suatu diskusi, perlu dilakukan persiapan seperti yang tertera pada pernyataan di bawah ini, kecuali ...", opsi: ["Mempelajari masalah yang akan didiskusikan.", "Melengkapi pengetahuan kita mengenai masalah tersebut dengan membaca buku, majalah, surat kabar, dan berita di media elektronik.", "Membuat rangkuman tentang masalah yang dibicarakan dengan lengkap dalam urutan yang padat.", "Latihan vokal sebelum hadir di forum diskusi."], jawaban: 3 },
+    { soal: "Bacalah teks berikut!\n\nHandphone dan Anak-Anak\n\nHandphone atau orang-orang sekarang lebih sering menggunakan smartphone adalah sebuah perangkat yang digunakan untuk mempermudah manusia dalam urusan komunikasi. Tidak hanya komunikasi saja, smartphone juga digunakan untuk membantu keperluan manusia lainnya. Hampir setiap orang memiliki HP, termasuk anak kecil sekalipun. Walaupun begitu, banyak terjadi pro dan kontra dalam hal pemberian HP untuk anak-anak.\n\nPihak yang mendukung atau pihak yang pro terhadap pemberian HP kepada anak-anak menganggap bahwa dengan adanya alat komunikasi ini, orang tua menjadi lebih mudah dalam memantau dan mengawasi kondisi anaknya kapan pun dan di mana pun. Selain itu, dengan adanya HP atau smartphone membuat anak lebih mudah mengakses informasi-informasi yang mereka butuhkan dalam menunjang proses pembelajaran di sekolah.\n\nPihak yang kontra atau pihak yang menentang, pemberian HP untuk anak-anak beralasan bahwa anak anak belum saatnya untuk diberikan teknologi yang canggih ini. Alasannya, tidak semua informasi-informasi di internet itu baik, banyak pula konten berbahaya yang tidak boleh diakses oleh anak-anak. Selain itu, dengan memberikan HP kepada anak-anak membuat ia menjadi pribadi yang pasif dan susah bergaul dengan lingkungan sekitar karena lebih asyik bermain game di HP nya.\n\nBerdasarkan kedua argumen pro dan kontra, kesimpulan yang dapat diambil adalah bahwa pemberian HP untuk anak-anak sebenarnya tidak wajib. Namun, jika memang sangat diperlukan, orang tua harus memberikan pengawasan ketat kepada anaknya. Orang tua harus mengetahui apa saja yang diakses oleh anaknya dan selalu mengingatkan akan hal baik yang boleh diakses dan hal buruk yang tidak boleh diakses agar tidak terjerumus ke hal-hal yang negatif.\n\nTujuan penulis dalam teks diskusi tersebut adalah ...", opsi: ["Orang tua dilarang memberikan HP kepada anaknya.", "Memberikan pandangan terkait penggunaan HP untuk anak.", "Anak tidak boleh menggunakan HP untuk mencari informasi.", "Tidak ada yang perlu dikhawatirkan tentang penggunaan HP bagi anak."], jawaban: 1 },
+    { soal: "Bacalah teks berikut!\n\nHandphone dan Anak-Anak\n\nHandphone atau orang-orang sekarang lebih sering menggunakan smartphone adalah sebuah perangkat yang digunakan untuk mempermudah manusia dalam urusan komunikasi. Tidak hanya komunikasi saja, smartphone juga digunakan untuk membantu keperluan manusia lainnya. Hampir setiap orang memiliki HP, termasuk anak kecil sekalipun. Walaupun begitu, banyak terjadi pro dan kontra dalam hal pemberian HP untuk anak-anak.\n\nPihak yang mendukung atau pihak yang pro terhadap pemberian HP kepada anak-anak menganggap bahwa dengan adanya alat komunikasi ini, orang tua menjadi lebih mudah dalam memantau dan mengawasi kondisi anaknya kapan pun dan di mana pun. Selain itu, dengan adanya HP atau smartphone membuat anak lebih mudah mengakses informasi-informasi yang mereka butuhkan dalam menunjang proses pembelajaran di sekolah.\n\nPihak yang kontra atau pihak yang menentang, pemberian HP untuk anak-anak beralasan bahwa anak anak belum saatnya untuk diberikan teknologi yang canggih ini. Alasannya, tidak semua informasi-informasi di internet itu baik, banyak pula konten berbahaya yang tidak boleh diakses oleh anak-anak. Selain itu, dengan memberikan HP kepada anak-anak membuat ia menjadi pribadi yang pasif dan susah bergaul dengan lingkungan sekitar karena lebih asyik bermain game di HP nya.\n\nBerdasarkan kedua argumen pro dan kontra, kesimpulan yang dapat diambil adalah bahwa pemberian HP untuk anak-anak sebenarnya tidak wajib. Namun, jika memang sangat diperlukan, orang tua harus memberikan pengawasan ketat kepada anaknya. Orang tua harus mengetahui apa saja yang diakses oleh anaknya dan selalu mengingatkan akan hal baik yang boleh diakses dan hal buruk yang tidak boleh diakses agar tidak terjerumus ke hal-hal yang negatif.\n\nInformasi yang dibahas pada paragraf kedua adalah ...", opsi: ["Pihak yang mendukung atau pihak yang pro terhadap pemberian HP.", "Pemberian HP untuk anak tidak wajib, tetapi juga boleh asal dengan pengawasan ketat.", "Orang-orang sekarang lebih sering menggunakan smartphone.", "Pihak yang kontra atau pihak yang menentang pemberian HP."], jawaban: 0 },
+    { soal: "Perhatikan langkah-langkah berikut!\n1. Mengumpulkan data atau fakta pendukung\n2. Memilih tema atau isu aktual\n3. Menyusun kerangka teks diskusi\n4. Mengembangkan kerangka menjadi karangan utuh\n\nUrutan yang tepat dalam menyusun atau menulis teks diskusi adalah ...", opsi: ["1 - 2 - 3 - 4", "2 - 1 - 3 - 4", "2 - 3 - 1 - 4", "3 - 2 - 1 - 4"], jawaban: 1 },
+    { soal: "Dalam tahap awal penulisan teks diskusi, pemilihan tema atau isu yang diangkat harus memenuhi syarat utama, yaitu ...", opsi: ["Bersifat subjektif dan hanya memihak satu sisi", "Merupakan masalah pribadi penulis", "Dapat menimbulkan dua pendapat yang berbeda atau pro dan kontra", "Hanya membahas topik yang sudah usang dan selesai dibahas"], jawaban: 2 },
+    { soal: "Dalam sebuah diskusi, pihak yang bertugas memaparkan materi, gagasan, atau argumen utama terkait isu yang dibahas adalah ...", opsi: ["Moderator", "Notulis", "Narasumber", "Audiens"], jawaban: 2 },
+    { soal: "Perhatikan pernyataan berikut ini!\n1. Mencatat jalannya diskusi\n2. Mencatat pertanyaan, tanggapan, dan kesimpulan\n3. Menyusun laporan hasil akhir diskusi\n\nPernyataan tersebut merupakan tugas dari seorang ...", opsi: ["Narasumber", "Notulen", "Notulis", "Peserta"], jawaban: 2 },
+    { soal: "Orang yang bertugas memimpin jalannya diskusi, mengatur waktu, serta menjaga agar suasana diskusi tetap kondusif dan terarah adalah ...", opsi: ["Moderator", "Notulis", "Peserta", "Narasumber"], jawaban: 0 },
+    { soal: "Bacalah paragraf di bawah ini dengan seksama!\n\nPemerintah akan memantau harga-harga kebutuhan bahan pokok di pasaran pada saat menjelang dan selama bulan ramadhan. Hal ini dilakukan untuk mencegah tindakan-tindakan nakal para pedagang yang menjual dengan harga yang sangat tinggi. Jika harga bahan pokok di pasaran melonjak, maka pemerintah akan bertindak dengan melakukan operasi pasar.\n\nKalimat kritik yang tepat pada isi paragraf di atas adalah ...", opsi: ["Pemerintah seharusnya memantau harga barang pokok tidak hanya selama bulan Ramadhan", "Pemerintah harus menurunkan harga bahan pokok selama bulan ramadhan", "Pemerintah seharusnya menindak para pedagang yang berlaku curang", "Pemerintah harus mengadakan operasi pasar selama bulan Ramadhan"], jawaban: 0 },
+    { soal: "Kalimat tepat untuk menyanggah pendapat adalah ...", opsi: ["Hasil analisis saudara tidak dapat dipertanggungjawabkan karena faktanya bertentangan dengan kenyataan", "Fakta yang Anda sampaikan tidak benar. Jadi, buat apa saya menyetujui analisis Anda?", "Pendapat ini tidak masuk akal dan aneh sehingga Anda tidak perlu melakukan analisis lagi.", "Pendapat Anda mungkin benar, tetapi ada beberapa alasan dan bukti yang perlu Anda teliti lagi."], jawaban: 3 },
+    { soal: "Kalimat tepat yang merupakan pernyataan persetujuan adalah ...", opsi: ["Saya sependapat dengan Anda karena internet memiliki ruang tidak terbatas", "Pendapat Anda sedikit berlebihan dan tidak masuk akal", "Saya setuju dengan pendapat Anda karena saya cocok dengan Anda", "Internet merupakan sarana lebih banyak berdampak buruk bagi perkembangan anak."], jawaban: 0 },
+    { soal: "Aplikasi cerpen berbasis web dapat ditemukan dalam aplikasi android. Koleksi cerpen tersebut selalu terbaru. Untuk menjalankan aplikasi ini, pengguna harus terhubung dengan internet. Oleh karena itu, pengguna harus berlangganan paket data untuk mengaktifkan aplikasi tersebut. Pelajar akan sangat terbebani hal tersebut karena mereka harus menyisihkan uang jajan agar bisa berlangganan aplikasi tersebut. Biaya yang harus mereka keluarkan ini tentu jadi masalah bagi mereka, terlebih bagi pelajar di golongan menengah ke bawah.\n\nKalimat sanggahan yang tepat dan santun sesuai topik masalah tersebut adalah ...", opsi: ["Saya sependapat dengan saudara. Mereka akan melakukan segala cara agar tidak kalah saing dengan teman-temannya.", "Pendapat saudara tidak beralasan dan tidak ada buktinya. Saya rasa saudara hanya mengada-ada saja", "Menurut saya, saudara terlalu dini menyimpulkan pendapat tersebut. Padahal belum ada bukti secara akademis atau penelitian secara aktual.", "Saya kurang setuju dengan pendapat saudara. Aplikasi cerpen tersebut mempermudah siswa dalam menyelesaikan tugas-tugas sastra yang diberikan oleh guru"], jawaban: 3 },
+    { soal: "Bacalah teks berikut!\n\nRemaja saat ini tumbuh dan hidup di tengah era perkembangan teknologi yang pesat. Di zaman tersebut, orang-orang dapat berkomunikasi meskipun jaraknya jauh. Namun, apakah hal ini akan berdampak ketika mereka dewasa nanti? Terlebih, melalui media sosial, orang dengan mudah memberikan data privasi, nomor telepon, alamat, data keluarga, serta hal privat lain, yang seharusnya tidak diekspos. Siapa saja bisa langsung berkenalan dan berkomunikasi tanpa mengetahui latar belakangnya. Celakanya lagi, berbagai pemahaman dapat dengan mudah masuk ke remaja bila tidak ada pengawasan yang ketat di kehidupan remaja tersebut.\n\nInti paragraf teks diskusi tersebut adalah ...", opsi: ["Remaja saat ini yang tumbuh dan hidup di tengah era perkembangan teknologi.", "Dampak ketika mereka dewasa", "Jejaring sosial", "Orang dapat berkomunikasi walau jauh jaraknya"], jawaban: 0 },
+    { soal: "Bacalah kutipan teks diskusi berikut ini!\n\nAkhir-akhir ini tindakan kriminal yang dilakukan oleh pelajar di kota-kota besar sangat memprihatinkan. Mereka tidak hanya bersekolah, tetapi juga melakukan perusakan, perkelahian, bahkan pembajakan sebuah bus. Salah satu pejabat menginstrusikan kepada Kepala Dinas Pendidikan (Disdik) setempat untuk memberikan sanksi kepada para pelajar nakal yang telah melakukan tindakan kriminal. Masyarakat pada umumnya setuju bahwa pelajar yang melakukan tindakan kriminal perlu diberi sanksi. Bentuk sanksi apa yang diberikan? Sampai saat ini masih terjadi perdebatan di kalangan masyarakat.\n\nIsu yang dibahas pada kutipan teks diskusi di atas adalah ...", opsi: ["Sanksi bagi pelajar nakal", "Pendapat masyarakat tentang pelajar nakal", "Nasihat Kepala Dinas Pendidikan", "Tindakan kriminal"], jawaban: 0 },
+    { soal: "Bacalah kedua kutipan teks diskusi berikut ini!\n\nTeks I\nJika ingin mengonsumsi teh yang sehat, disarankan untuk mengkonsumsi sebanyak 5 cangkir ukuran 200 ml setiap hari. Karena jumlah tersebut masih batas normal kadar kafein yang bisa dikonsumsi yaitu setara 750 mg/hari. Usahakan juga seduh teh dengan air yang tidak terlalu banyak dan tidak ditambahkan gula mencegah rusaknya zat-zat yang dikandung dan hilangnya manfaat teh. Dalam kebiasaan sehari hari, hindari minum teh saat perut kosong karena bisa meningkatkan produksi asam lambung sehingga berpengaruh pada pencernaan.\n\nTeks II\nDewasa ini beberapa wanita memutuskan untuk berkarier. Namun, adakalanya respons yang diberikan oleh lingkungan sekitar tidak seusai yang dibayangkan, keinginan pribadi wanita terbentur dengan adanya norma dan peraturan. Keputusan untuk menjadi wanita karier tersebut kemudian menimbulkan kontroversi di kalangan masyarakat.\n\nStruktur yang sesuai dengan kedua teks di atas adalah ...", opsi: ["Teks I: Isu dan Teks II: Simpulan", "Teks I: Pro dan Teks II: Kontra", "Teks I: Simpulan dan Teks II: Isu", "Teks I: Kontra dan Teks II: Pro"], jawaban: 2 },
+    { soal: "Bacalah teks diskusi di bawah ini!\n\n(4) Beberapa orang yang tidak setuju mengatakan bahwa anak sudah cukup belajar di sekolah. Mereka juga berpendapat bahwa anak-anak memiliki hobi yang ingin mereka lakukan setelah sekolah, seperti olahraga, musik, atau bermain dengan teman sebayanya. Hal lain yang dinyatakan adalah banyak PR yang justru sia-sia karena kebanyakan dikerjakan oleh ibu/kakaknya. Hal tersebut bukan disebabkan oleh ketidakmengertian anak dalam mengerjakan PR, tetapi karena anak tersebut ingin bermain setelah belajar cukup lama di sekolah.\n\n(3) Kedua pernyataan di atas sebenarnya memiliki alasan yang kuat dan masuk akal. Simpulan yang dapat diambil dari kedua pendapat tersebut adalah PR boleh diberikan, tetapi jangan sampai PR yang diberikan terlalu banyak. Selain itu, PR hanya diberikan pada materi yang memang perlu diberikan jam tambahan.\n\n(1) Namun, ada juga pendapat yang menyatakan setuju mengenai PR yang diberikan kepada anak. Orang tua dan guru berpendapat bahwa penting untuk mengetahui kemampuan anak-anak dalam belajar tanpa dukungan dari guru. Mereka mengatakan bahwa malam hari adalah waktu yang baik bagi anak-anak untuk duduk dan berpikir tentang apa yang telah mereka pelajari di sekolah. Selain itu, mereka menyatakan bahwa jam belajar di sekolah terlalu singkat. Hal tersebut menegaskan bahwa pemberian PR seperti membaca suatu materi atau menulis tugas, perlu dilakukan di rumah.\n\n(2) PR yang merupakan kependekan dari pekerjaan rumah merupakan hal yang sudah tidak asing lagi di telinga kita. Ada banyak diskusi mengenai apakah anak harus diberikan PR atau tidak. Sudah cukup atau belum waktu belajar di sekolah. Apakah anak perlu belajar tambahan di rumah setelah belajar yang cukup banyak di sekolah?\n\nUrutan yang tepat agar menjadi sebuah teks diskusi yang utuh adalah ...", opsi: ["2-3-4-1", "2-4-3-1", "1-3-4-2", "2-4-1-3"], jawaban: 3 },
+    { soal: "Bacalah kutipan teks diskusi berikut ini!\n\nGame online adalah jenis permainan yang memanfaatkan jaringan komputer (LAN atau internet) sebagai medianya. Biasanya, game online disediakan sebagai tambahan layanan dari perusahaan penyedia jasa online atau dapat diakses langsung melalui sistem yang disediakan oleh perusahaan pembuat permainan tersebut. Sebuah game online bisa dimainkan secara bersamaan dengan menggunakan komputer yang terhubung dalam sebuah jaringan tertentu. Saat ini ketenaran game online semakin menanjak permainan ini seolah menjadi primadona, terutama di kalangan pelajar.\n\nHal yang dibahas dalam teks di atas adalah ...", opsi: ["Bahaya game online di bidang kognitif", "Kerugian bermain game online", "Popularitas game online di kalangan pelajar", "Fungsi game online sebagai media pembelajaran"], jawaban: 2 },
+    { soal: "Bacalah kutipan teks diskusi berikut ini!\n\nMasyarakat internasional memiliki perhatian yang besar tentang hal ini. Sejak tahun 1990 hingga sekarang, pembangunan stasiun tenaga nuklir masih tetap menjadi problematika dan ramai dibicarakan. Melalui pemaparan tersebut, pendapat apa yang dapat Anda kemukakan?\n\nPernyataan yang sesuai dengan kutipan teks tersebut adalah ...", opsi: ["Tidak adanya problematika tentang pembangunan stasiun tenaga nuklir.", "Pembangunan stasiun tenaga nuklir sebelum tahun 1990 hingga sekarang.", "Perhatian masyarakat internasional terhadap pembangunan tenaga nuklir.", "Masyarakat internasional diam saja mengenai pembangunan stasiun tenaga nuklir"], jawaban: 2 },
+    { soal: "Bacalah kutipan teks diskusi berikut ini!\n\n(1) Dalam waktu dekat pemerintah akan mengujicobakan Sekolah Seharian di beberapa kota.\n(2) Sekolah Seharian diharapkan dapat menanggulangi aktivitas negatif anak saat orang tua mereka belum pulang.\n(3) Namun beberapa pihak menganggap Sekolah Seharian memberangus hak main dan hak sosialisasi anak.\n(4) Terlepas dari pro kontra di beberapa negara program ini sudah dilaksanakan.\n(5) Ujicoba Sekolah Seharian sebaiknya di kota yang tepat sasaran.\n\nPernyataan yang merupakan pendapat mendukung terhadap masalah utama pada teks tersebut terdapat pada kalimat ...", opsi: ["2", "3", "4", "5"], jawaban: 0 },
+    { soal: "Bacalah teks diskusi berikut!\n\nTayangan \"Death Challenge\" di TV Harus Dihentikan\n\nBeberapa waktu lalu, pesulap Demian gagal melakukan atraksi \"death challenge\" yang berakibat fatal pada stuntman-nya. Aksi seperti ini sebenarnya lumrah dilakukan oleh para pesulap dan dinikmati masyarakat. Namun, aksi semacam itu bahaya dan risikonya sangat tinggi. Oleh karena itu, Komisi Penyiaran Indonesia (KPI) harus menghentikan tayangan itu.\n\nSebagai lembaga yang bertanggung jawab terhadap berbagai tayangan acara di stasiun TV, KPI tidak boleh pandang bulu. KPI harus bertindak tegas terhadap tayangan acara memamerkan adegan maut di ruang tayangan itu bisa menjadi pembunuhan terselubung, terutama penonton yang mengidap sakit jantung.\n\nAkan tetapi, sebagian kalangan menilai bahwa acara \"death challenge\" masih diperlukan bagi mereka untuk mengembangkan kreativitasnya. Bahkan, sebagian besar penonton juga masih menyukainya. Jadi, tidak ada alasan untuk menghentikan acara itu. Mereka yang tidak suka lebih baik pindah saluran atau mematikan TV.\n\nSudut pandang kontra pada teks diskusi tersebut terletak pada ...", opsi: ["Seluruh paragraf", "paragraf pertama", "paragraf kedua", "paragraf ketiga"], jawaban: 3 },
+    { soal: "Bacalah kutipan teks diskusi berikut!\n\nHari valentine atau Valentine Day agaknya tidak asing lagi di kalangan remaja. Bahkan tidak sedikit di antara mereka yang menunggu-nunggu kedatangannya. Bagi mereka, Valentine Day adalah momentum mencurahkan kasih sayang kepada orang yang dicintai. Jutaan orang bertukar kartu cinta, kado spesial, hingga pesan cinta sebagai simbol perayaan Valentine yang diyakini jatuh pada tanggal 14 Februari tersebut. Adanya publikasi di media terutama televisi yang mengumbar peringatan Valentine membuat hari itu menjadi seakan spesial. Namun, di negara kita, peringatan Valentine mengundang kontroversi. Apakah peringatan hari Valentine boleh dirayakan di Indonesia?\n\nKutipan teks tersebut merupakan bagian ...", opsi: ["Pendahuluan/isu", "Pendapat pro", "Pendapat kontra", "Simpulan"], jawaban: 0 }
+];
+
+function shuffleArray(arr) {
+    for (let i = arr.length - 1; i > 0; i--) {
+        const j = Math.floor(Math.random() * (i + 1));
+        [arr[i], arr[j]] = [arr[j], arr[i]];
+    }
+    return arr;
+}
+
+function renderSoal() {
+    const container = document.getElementById('soalContainer');
+    container.innerHTML = '';
+    const shuffledSoal = shuffleArray([...soalData]);
+    shuffledSoal.forEach((item, index) => {
+        const opsiAsli = item.opsi.map((teks, i) => ({ teks, indexAsli: i }));
+        const opsiAcak = shuffleArray([...opsiAsli]);
+        const jawabanBenarIndex = opsiAcak.findIndex(o => o.indexAsli === item.jawaban);
+        const soalDiv = document.createElement('div');
+        soalDiv.className = 'soal-item';
+        soalDiv.innerHTML = `
+            <div class="soal-text">
+                <span class="soal-number">${index + 1}.</span>
+                <span>${item.soal.replace(/\n/g, '<br>')}</span>
+            </div>
+            <div class="options">
+                ${opsiAcak.map((opt, i) => `
+                    <label class="option">
+                        <input type="radio" name="soal_${index}" value="${i}" data-benar="${jawabanBenarIndex}">
+                        <span>${String.fromCharCode(65 + i)}. ${opt.teks}</span>
+                    </label>
+                `).join('')}
+            </div>
+        `;
+        container.appendChild(soalDiv);
+    });
+}
+
+function cekJawaban() {
+    const soalItems = document.querySelectorAll('.soal-item');
+    let benar = 0, salah = 0, kosong = 0;
+    soalItems.forEach((item) => {
+        const radios = item.querySelectorAll('input[type="radio"]');
+        const dipilih = Array.from(radios).find(r => r.checked);
+        if (!dipilih) {
+            kosong++;
+            item.style.borderColor = '#e9eef4';
+            item.style.backgroundColor = '#ffffff';
+        } else {
+            if (dipilih.value === dipilih.dataset.benar) {
+                benar++;
+                item.style.borderColor = '#1d6b3f';
+                item.style.backgroundColor = '#f0fdf4';
+            } else {
+                salah++;
+                item.style.borderColor = '#b13e3e';
+                item.style.backgroundColor = '#fef2f2';
+            }
+        }
+    });
+    const total = soalItems.length;
+    const skor = Math.round((benar / total) * 100);
+    const hasilDiv = document.getElementById('hasil');
+    hasilDiv.innerHTML = `
+        <div class="skor">Skor: ${skor} / 100</div>
+        <div>Benar: <span style="color:#1d6b3f;font-weight:700;">${benar}</span> | 
+             Salah: <span style="color:#b13e3e;font-weight:700;">${salah}</span> | 
+             Kosong: <span style="color:#6a7e96;font-weight:700;">${kosong}</span></div>
+        <div style="margin-top:8px;font-size:0.95rem;color:#4a5f7a;">Total ${total} soal</div>
+    `;
+    hasilDiv.classList.add('show');
+}
+
+function acakUlang() {
+    renderSoal();
+    const hasilDiv = document.getElementById('hasil');
+    hasilDiv.classList.remove('show');
+    hasilDiv.innerHTML = '';
+}
+
+document.getElementById('cekBtn').addEventListener('click', cekJawaban);
+document.getElementById('shuffleBtn').addEventListener('click', acakUlang);
+renderSoal();
+</script>
+</body>
+</html>
